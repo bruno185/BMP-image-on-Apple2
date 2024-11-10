@@ -23,6 +23,7 @@ ptr             equ $06
 *
                 org $E00
         
+
                 jsr DoHeader
                 bcc okheader              ; exit on error if carry set
                 rts
@@ -31,25 +32,28 @@ okheader
                 GP_call InitGraf;0
                 GP_call InitPort;MyPort
                 GP_call SetPort;MyPort
+*<sym>
+startimage
 
                 jsr Doimg 
 
-
                 ;jsr DoPaint
+                lda #0
+                sta quitflag
                 jsr WaitForKeyPress
+                jsr DoKey
+                lda quitflag
+                beq startimage
                 jsr DoTextScreen
                 rts
 *
 *********************************************************************
 *
-*
-*<bp>
 *<sym>
 DoHeader
-                jsr TestSign            ; test BMP signature
+                jsr TestSignature       ; test BMP signature
                 bcc oksign              ; exit on error if carry set
                 rts
-
 *<sym>
 oksign  
 * get file length
@@ -67,30 +71,29 @@ oksign
                 cmp #<maxlen
 :1              bcc lower
                 bne higher
-                beq same
+                beq samelength
 *<sym>
 higher          jmp dataerr
                 sec
                 rts
 *<sym>
-same                                    ; file length = max : OK
+samelength                              ; file length = max : OK
 *<sym>
 lower                                   ; file length < max : OK
-
-                ldx #$12                ; get image width
+                ldx #$12                ; get image width in BMP header
                 lda bmp,x 
                 sta hdef
                 inx
                 lda bmp,x 
                 sta hdef+1
-                ldx #$16                ; get image height
+                ldx #$16                ; get image height in BMP header
                 lda bmp,x 
                 sta vdef
                 inx
                 lda bmp,x 
                 sta vdef+1 
 
-                lda hdef+1              ; width must be <= maxwidth (560 ?)
+                lda hdef+1              ; width must be <= maxwidth
 
                 cmp #>maxwidth
                 bne :1
@@ -105,7 +108,7 @@ badw            jmp dataerr
                 rts
 *<sym>
 goodw
-                lda vdef+1              ; height must be <= maxheight (192 ?)
+                lda vdef+1              ; height must be <= maxheight
                 cmp #>maxheight
                 bne :1
                 lda vdef
@@ -115,7 +118,7 @@ goodw
                 beq goodh
 *<sym>
 goodh
-                ldx #$A                 ; get image offset 
+                ldx #$A                 ; get image offset in BMP header
                                         ; image data start @ bmp+imgoffset
                 lda bmp,x 
                 sta imgoffset
@@ -135,23 +138,24 @@ goodh
 *<sym>
 filelen         ds 2
 *<syme>
-maxlen          equ $3600
+maxlen          equ $2000               ; 8 k for image (between $6000 and $7FFF)
 *<syme>
-maxwidth        equ 560
+maxwidth        equ 280                 ; = 560 / 2 (each pixel is doubled in width)
 *<syme>
-maxheight       equ 192
+maxheight       equ 192                 ; screen height in pixels
 *<sym>
-hdef            ds 2
+hdef            ds 2                    ; image width
 *<sym>
-vdef            ds 2
+vdef            ds 2                    ; image height
 *<sym>
-imgoffset       ds 2
+imgoffset       ds 2                    ; offset to image data (over BMP header)
 *<sym>
 imgdata
-                ds 2
+                ds 2                    ; address of image data
+
 
 *<sym>
-TestSign
+TestSignature
                 lda bmp                 ; test signature
                 cmp #'B'
                 bne dataerr
@@ -225,7 +229,9 @@ tableOne        ds 7
 *<sym>
 bitmapwidth     ds 1
 *<sym>
-flipflop        db 1
+flipflop        db 1                    ; used to double pixels horizontally 
+*<sym>
+quitflag        ds 1
 
 
 ************ line grafport ************
@@ -243,9 +249,10 @@ clipr           dw 0,0,0,0              ; clip rectangle
 *<sym>
 outbuff         ds 80
 *<sym>
-carryf          ds 1
+carryf          db 1
+*<sym>
+inverse         db 1
 
-*<bp>
 *<sym>
 Doimg
 ***** init *****
@@ -305,9 +312,19 @@ setline
 *<sym>   
 lineloop                                ; get a new input byte                   
                 lda $ffff               ; self modified
+                pha
+                lda inverse
+                beq normalvideo
+                pla 
+                eor #$ff
+                jmp inversevideo
+*<sym>
+normalvideo    
+                pla 
+*<sym>
+inversevideo
                 sta inbyte              ; save it
                 inc inputByteCnt        ; update counter
-
 
 * inner loop on pixels (= input bits)
 *<sym>
@@ -319,7 +336,6 @@ pixelloop
                 inc inputBitCnt
                 bne getoutbyte
                 inc inputBitCnt+1
-
 *<sym>        
 getoutbyte      
                 lda $ffff               ; get ouput byte
@@ -329,16 +345,13 @@ getoutbyte
 pokeZero                                ; no : set this bit to 0 in output bit
                 and tableZero,x         ; A : ouput byte, and it with table value
                 ldy #0
-                sty carryf
+                sty carryf              ; save carry value in carryf var
                 jmp pokeresult
 *<sym>
 pokeOne                                 ; yes : set this bit to 1 in output bit
                 ldy #1
-                sty carryf
+                sty carryf              ; save carry value in carryf var
                 ora tableOne,x
-
-
-
 *<sym>                                
 pokeresult                              ; save output byte 
                 ldx getoutbyte+1        ; get output address
@@ -347,7 +360,6 @@ pokeresult                              ; save output byte
                 stx ptr+1
                 ldy #0
                 sta (ptr),y             ; poke output byte in its original place
-
 *<sym> 
 updateoutput    inc outputBitPos       ; get bit pos (output)
                 lda outputBitPos
@@ -357,26 +369,22 @@ updateoutput    inc outputBitPos       ; get bit pos (output)
                 sta outputBitPos        ; yes : reset pos
                 jsr nextoutput          ; inc pointer
 :1
-
                 clc 
                 ldy carryf
                 beq :2
                 sec
-:2              lda flipflop
-                eor #1
-                sta flipflop
-                beq getoutbyte
-
+:2              lda flipflop            ; each pixel horizontally must be draw twice (and only twice)
+                eor #1                  ; test flipflop 
+                sta flipflop            ; invvert it
+                beq getoutbyte          ; if 0 : draw same pixel once again
 
                 lda inputBitCnt         ; all pixels done for this line ?
-                cmp hdef 
-                bne nextpixel
+                cmp hdef                ;         
+                bne nextpixel           ; no : loop to process next pixel
                 lda inputBitCnt+1
                 cmp hdef+1
                 bne nextpixel
 
-
-*<bp>
 *<sym>  
 nextline                                ; yes : paint current line and prepare next one
                 jsr drawImgLine         ; a line has been calcultated, paint it !!!
@@ -460,6 +468,41 @@ drawImgLine
 *<syme>
 bmp             equ $6000               ; image is supposed to be loaded at $6000 
 
+*<bp>
+*<sym>
+DoKey                                   ; test keys
+                cmp #"i"                ; if i ou I : negate image
+                beq doInverse
+                cmp #"I" 
+                beq doInverse 
+*<sym>
+nextkey         cmp #$9B                ; escape 
+                beq exitDK
+                ;jsr clerscr
+
+                cmp #"c"
+                beq doclear
+                cmp #"C"
+                beq doclear
+                rts                     ; else do nothing
+*<sym>
+doclear
+                jsr clerscr
+                rts
+*<sym>
+exitDK          lda #1                  ; escape : set quit flag
+                sta quitflag
+                rts
+        
+*<sym>
+doInverse
+                lda inverse
+                eor #$01
+                sta inverse 
+                jmp startimage
+
+*
+*
 * DoPaint
 *
 *<sym>
@@ -517,6 +560,7 @@ DataBits        dfb $00,$00,$00         ; bitmap data
 
 * Wait for keypress
 *
+*<sym>
 WaitForKeyPress 
                 lda kbd
                 bpl WaitForKeyPress
@@ -620,6 +664,34 @@ msglgth2        equ *-message3
 
 
 * ------------------ utils ------------------
+* Clear DHGR screen   
+screenbase      equ $2000               ; address of screen memory    
+*<sym> 
+clerscr
+                lda #<screenbase
+                sta ptr
+                lda #>screenbase+1
+                sta ptr+1
+                ldy #0
+                lda #0
+                STA $C000
+*<sym> 
+clrloop         
+                sta (ptr),y 
+                sta RAMWRTON            ; write char in aux
+                sta (ptr),y
+                sta RAMWRTOFF
+                iny
+                bne clrloop
+                inc ptr+1
+                ldx ptr+1
+                cpx #$40
+                bne clrloop
+                sta $C001
+                jsr WaitForKeyPress
+                jmp startimage
+                rts
+
 *<sym>
 DoTextScreen
 

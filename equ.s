@@ -26,8 +26,10 @@ in0             equ $fe89       ; SETKBD (= IN#0)
 
 *
 ************ ROM switches ************  
-RAMRDON         equ $C003       ; read aux  
+STORE80OFF      equ $C000       ; disable 80-column store
+STORE80ON       equ $C001       ; enable 80-column store
 RAMRDOFF        equ $C002       ; read main
+RAMRDON         equ $C003       ; read aux  
 RAMWRTOFF       equ $C004       ; write to main
 RAMWRTON        equ $C005       ; write to aux
 ALTCHARSET0FF   equ $C00E 
