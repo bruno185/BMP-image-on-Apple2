@@ -222,7 +222,7 @@ tableOne        ds 7
 *<sym>
 bitmapwidth     ds 1
 *<sym>
-flipflop        db 1
+flipflop        ds 1
 
 
 ************ line grafport ************
@@ -239,8 +239,8 @@ clipr           dw 0,0,0,0              ; clip rectangle
 *<m1>
 *<sym>
 outbuff         ds 80
-*<sym>
-carryf          ds 1
+
+
 
 
 *<sym>
@@ -286,18 +286,16 @@ setline
                 sta imageLine+2         ; set vertical position of lower image line   
 
                 lda bitmapwidth
-                asl
                 sta imgw                ; set image width in byte
 
                 lda hdef                ; set clip rectangle in pixels
-                asl
                 sta clipr+4
                 lda hdef+1
-                rol
                 sta clipr+5
 
 ***** process data *****
 * outer loop (on all bytes of an image line)
+*<bp>
 *<sym>   
 lineloop                                ; get a new input byte                   
                 lda $ffff               ; self modified
@@ -314,7 +312,6 @@ pixelloop
                 inc inputBitCnt
                 bne getoutbyte
                 inc inputBitCnt+1
-
 *<sym>        
 getoutbyte      
                 lda $ffff               ; get ouput byte
@@ -323,13 +320,9 @@ getoutbyte
 *<sym>
 pokeZero                                ; no : set this bit to 0 in output bit
                 and tableZero,x         ; A : ouput byte, and it with table value
-                ldy #0
-                sty carryf
                 jmp pokeresult
 *<sym>
 pokeOne                                 ; yes : set this bit to 1 in output bit
-                ldy #1
-                sty carryf
                 ora tableOne,x
 
 
@@ -352,17 +345,6 @@ updateoutput    inc outputBitPos       ; get bit pos (output)
                 sta outputBitPos        ; yes : reset pos
                 jsr nextoutput          ; inc pointer
 :1
-
-                clc 
-                ldy carryf
-                beq :2
-                sec
-:2              lda flipflop
-                eor #1
-                sta flipflop
-                beq getoutbyte
-
-
                 lda inputBitCnt         ; all pixels done for this line ?
                 cmp hdef 
                 bne nextpixel
@@ -370,10 +352,6 @@ updateoutput    inc outputBitPos       ; get bit pos (output)
                 cmp hdef+1
                 bne nextpixel
 * FIXME: >
-
-
-
-*<bp>
 *<sym>  
 nextline                                ; yes : paint current line and prepare next one
                 jsr drawImgLine         ; a line has been calcultated, paint it !!!
@@ -390,10 +368,7 @@ nextline                                ; yes : paint current line and prepare n
                 sta inputBitPos         ; reset bit pos for input
                 sta inputBitCnt         ; reset input bit counter
                 sta inputBitCnt+1
-                sta outputBitPos        ; reset output byte position  
-
-                lda #1
-                sta flipflop      
+                sta outputBitPos        ; reset output byte position        
       
                 inc lineCnt             ; inc line counter
                 lda lineCnt
@@ -438,6 +413,7 @@ nextoutputO     rts
 *<sym>
 drawImgLine
                 GP_call PaintBits;imageLine
+*<bp>
                 dec imageLine+2
                 rts
 *<sym>
