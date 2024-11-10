@@ -1,5 +1,17 @@
-;
-* Demo for Graphics Primitives            
+* * * * * * * * * * * * * * * * * * * * * * * * * * * 
+*                                                   *
+*   Diplay a BMP image using Graphics Primitives    *      
+*                                                   *  
+* * * * * * * * * * * * * * * * * * * * * * * * * * *  
+*
+* BMP file must be loaded before this program is called.
+* Typically by STARTUP Basic program (ProDOS)
+* BMP image must have 1 bit per pixel
+* Dimension must not exceed 280 x 192
+* Every bit (= pixel) in BMP file is doubled horizontally 
+* to respect image aspect ratio (more or less)
+* The image is drawn line by line, using PaintBits function of Graphics Primitives package
+*
 *
 *<sym>
 GP_call     MAC                                         ; call to graphic primitives (macro)
@@ -16,14 +28,10 @@ MyBuffer        equ $8000                               ; starting address of st
 TestFont        equ $800                                ; loading address of "TEST.FONT" file
 *<sym>
 ptr             equ $06
-
-*
 *
 **************************** MAIN PROGRAM ****************************
 *
                 org $E00
-        
-
                 jsr DoHeader
                 bcc okheader              ; exit on error if carry set
                 rts
@@ -49,13 +57,14 @@ startimage
 *
 *<sym>
 DoHeader
+* check image specs.
                 jsr TestSignature       ; test BMP signature
                 bcc oksign              ; exit on error if carry set
                 rts
 *<sym>
 oksign  
 * get file length
-                ldx #2
+                ldx #2                  ; offset to file length in BMP header
                 lda bmp,x 
                 sta filelen
                 inx 
@@ -71,7 +80,7 @@ oksign
                 bne higher
                 beq samelength
 *<sym>
-higher          jmp dataerr
+higher          jmp dataerr             ; size is too big
                 sec
                 rts
 *<sym>
@@ -115,7 +124,14 @@ goodw
                 bne badw
                 beq goodh
 *<sym>
-goodh
+goodh      
+                ldx #$1C                ; offset to image depth (# of bits per pixel)
+                lda bmp,x               ; get value
+                cmp #1                  ; must be 1 
+                beq gooddepth
+                jmp dataerr
+*<sym>
+gooddepth            
                 ldx #$A                 ; get image offset in BMP header
                                         ; image data start @ bmp+imgoffset
                 lda bmp,x 
@@ -150,8 +166,8 @@ imgoffset       ds 2                    ; offset to image data (over BMP header)
 *<sym>
 imgdata
                 ds 2                    ; address of image data
-
-
+*
+*
 *<sym>
 TestSignature
                 lda bmp                 ; test signature
@@ -179,8 +195,7 @@ bmpOK           clc
 *<sym>
 errmsg          asc "Error"
                 dfb 0
-
-*<sym>
+*
 * Doimg
 * lopp on each line
 * loop on a line (lopp length = hdef bytes / 8) => calculte loop length 
@@ -189,17 +204,16 @@ errmsg          asc "Error"
 
 * for i = 1 to loop length
 * for each byte :
-* loop 8 time :                 ; no, end of line may occur before 8
+* loop 8 time (or less if end of line occurs before 8)
 * get next bit by shifting left in C
 * poke bit in output byte : need bitcounter
 * if C = 0 : x = bitcounter; lda output byte ; and tableZero ; sta output byte
 * if C = 1 : x = bitcounter; lda tableZero,x ; eor $ff ; and output byte ; sta output byte
-
 * inc bitcounter ; cmp #7 ; bne loop else { next output byte, bitcounter = 0}
-
-* Draw line 
+* Draw line using PaintBits function in graphic primitives package
 * next line
-
+* check for last line
+*
 * vars :
 *<sym>
 lineCnt         ds 1    ; current # of lines
@@ -229,10 +243,9 @@ bitmapwidth     ds 1
 *<sym>
 flipflop        db 1                    ; used to double pixels horizontally 
 *<sym>
-quitflag        ds 1
+quitflag        ds 1                    ; to ckeck if user press escape key
 
-
-************ line grafport ************
+******** line grafport ********
 *<m2>
 *<sym>
 imageLine       dw 0,0                  ; view location on current port
@@ -242,7 +255,6 @@ imfbits         dw outbuff              ; bitmap pointer
 imgw            dw 0                    ; width of bitmap 
 *<sym>
 clipr           dw 0,0,0,0              ; clip rectangle
-
 *<m1>
 *<sym>
 outbuff         ds 80
@@ -391,7 +403,6 @@ nextline                                ; yes : paint current line and prepare n
                 sta getoutbyte+1
                 lda #>outbuff
                 sta getoutbyte+2 
-
                 jsr clearbuffer         ; zero ouput buffer 
 *<sym> 
 loopadjust                              ; in an image line, # of bytes must be divisible by 4
@@ -407,9 +418,8 @@ loopadjust                              ; in an image line, # of bytes must be d
 *<sym> 
 div4ok
                 lda #0
-                sta inputByteCnt
+                sta inputByteCnt        ; init byte counter for a line
                 jsr nextinput           ; inc pointer to input byte
-
                 lda #0
                 sta inputBitPos         ; reset bit pos for input
                 sta inputBitCnt         ; reset input bit counter
@@ -417,15 +427,15 @@ div4ok
                 sta outputBitPos        ; reset output byte position  
 
                 lda #1
-                sta flipflop      
+                sta flipflop            ; reset toggle to double pixel width    
       
                 inc lineCnt             ; inc line counter
                 lda lineCnt
                 cmp vdef                ; all lines done ?
-                beq endloop             ; yes : end
+                beq endimage            ; yes : the image is finished !
                 jmp lineloop            ; no : loop for another image line
 *<sym>  
-endloop
+endimage
                 rts                     ; END !!!
 *<sym>         
 nextpixel                               ; no : other pixels to go on current line 
@@ -448,7 +458,6 @@ nextinput
 *<sym>
 nextinputO      rts 
 
-
 *<sym>
 nextoutput
                 inc getoutbyte+1
@@ -457,10 +466,9 @@ nextoutput
 *<sym>
 nextoutputO     rts
 
-
 *<sym>
 drawImgLine
-                GP_call PaintBits;imageLine
+                GP_call PaintBits;imageLine     ; dram a line of the image
                 dec imageLine+2
                 rts
 *<syme>
@@ -574,7 +582,6 @@ ClearIt         equ *                                           ; fill port with
                 GP_call SetPattern;White                ; restore pattern to white (1,1,...)
                 rts
 WowRect         dw 0,0,10000,10000                      ; very large rectangle
-
 *
 * Data for rects., polygons, bitmap, and text
 *
@@ -692,7 +699,6 @@ clrloop
 
 *<sym>
 DoTextScreen
-
                 sta $c000 ;80store off
                 sta $c002 ;RAMRD main
                 sta $c004 ;RAMWRT main
@@ -705,7 +711,7 @@ DoTextScreen
                 jsr pr0
                 jsr in0
                 rts
-
+*
 *<sym>
 clearbuffer
 * clear memory 
@@ -713,7 +719,6 @@ clearbuffer
                 sta ptr 
                 lda #>outbuff
                 sta ptr+1
-
                 lda #0
                 ldy #0
 *<sym>
@@ -722,8 +727,7 @@ pokeZ           sta (ptr),y
                 cpy #80
                 bne pokeZ
                 rts
-
-
+*               
 *<sym>
 ProDOSQuit
                 jsr $BF00 ; ProDOS Quit
@@ -733,10 +737,11 @@ ProDOSQuit
 *<sym>
 QuitParams      dfb 4
                 dw 0,0,0,0                              ; standard parameters for Quit call
-
+*
 *<sym>
 computeBytes
-* given the # of bits in A,X (lo,hp) compute the # of bytes to hold these bits.             
+* given the # of bits in A,X (lo,hi), computes the # of bytes
+* to hold these bits on Apple II screen (7 pixels per byte)           
                 sta mybyte              ; number of bits (16 bits integer)
                 stx mybyte+1
                 ldx #1                  ; x = number of needed bytes
@@ -757,9 +762,8 @@ loopbyte
                                         ; > 0 : loop
                 inx
                 jmp loopbyte
-
-:1              rts
+:1              
+        rts
 *<sym>
 mybyte         
                 ds 2
-
