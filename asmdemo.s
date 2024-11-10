@@ -43,12 +43,13 @@ okheader
 *********************************************************************
 *
 *
-
+*<bp>
 *<sym>
 DoHeader
                 jsr TestSign            ; test BMP signature
                 bcc oksign              ; exit on error if carry set
                 rts
+
 *<sym>
 oksign  
 * get file length
@@ -209,6 +210,8 @@ outputBitPos    ds 1    ; current position in ouput byte (0 to 6)
 *<sym>
 inbyte          ds 1    ; save input byte
 *<sym>
+inputByteCnt    ds 1    ; counts # of input byte in a line
+*<sym>
 tableZero
                 db %11111110 
                 db %11111101
@@ -242,7 +245,7 @@ outbuff         ds 80
 *<sym>
 carryf          ds 1
 
-
+*<bp>
 *<sym>
 Doimg
 ***** init *****
@@ -252,7 +255,8 @@ Doimg
                 lda #0                  ; init input line counter
                 sta lineCnt
                 sta inputBitCnt         ; init input bit counter
-                sta inputBitCnt+1             
+                sta inputBitCnt+1  
+                sta inputByteCnt        ; init # of byte in a row           
 
                 sta outputBitPos        ; init output bit counter
 
@@ -302,6 +306,7 @@ setline
 lineloop                                ; get a new input byte                   
                 lda $ffff               ; self modified
                 sta inbyte              ; save it
+                inc inputByteCnt        ; update counter
 
 
 * inner loop on pixels (= input bits)
@@ -333,7 +338,7 @@ pokeOne                                 ; yes : set this bit to 1 in output bit
                 ora tableOne,x
 
 
-* < FIXME:  
+
 *<sym>                                
 pokeresult                              ; save output byte 
                 ldx getoutbyte+1        ; get output address
@@ -369,8 +374,6 @@ updateoutput    inc outputBitPos       ; get bit pos (output)
                 lda inputBitCnt+1
                 cmp hdef+1
                 bne nextpixel
-* FIXME: >
-
 
 
 *<bp>
@@ -383,9 +386,24 @@ nextline                                ; yes : paint current line and prepare n
                 lda #>outbuff
                 sta getoutbyte+2 
 
-                jsr clearbuffer         ; zero ouput buffer              
-
+                jsr clearbuffer         ; zero ouput buffer 
+*<sym> 
+loopadjust                              ; in an image line, # of bytes must be divisible by 4
+                                        ; if not, padded with zeros to make it divisible by 4
+                                        ; so we need to jump over these useless bytes.
+                lda inputByteCnt        ; get # of byte done in previous image line
+                and #3                  ; if this number is divisible by 4 
+                beq div4ok              ; go on
+                jsr nextinput           ; else inc pointer to input data
+                inc inputByteCnt        ; inc counter       
+                jmp loopadjust          ; and loop until inputByteCnt is divisible by 4 
+                bne div4ok
+*<sym> 
+div4ok
+                lda #0
+                sta inputByteCnt
                 jsr nextinput           ; inc pointer to input byte
+
                 lda #0
                 sta inputBitPos         ; reset bit pos for input
                 sta inputBitCnt         ; reset input bit counter
@@ -403,7 +421,6 @@ nextline                                ; yes : paint current line and prepare n
 *<sym>  
 endloop
                 rts                     ; END !!!
-
 *<sym>         
 nextpixel                               ; no : other pixels to go on current line 
                 inc inputBitPos         ; get bit pos (input)
@@ -440,34 +457,9 @@ drawImgLine
                 GP_call PaintBits;imageLine
                 dec imageLine+2
                 rts
-*<sym>
-bmp
-* BBB.BMP
+*<syme>
+bmp             equ $6000               ; image is supposed to be loaded at $6000 
 
-                hex 424DB80000000000
-                hex 00003E0000002800
-                hex 00001E0000001E00
-                hex 0000010001000000
-                hex 00007A000000232E
-                hex 0000232E00000000
-                hex 000000000000FFFF
-                hex FF00000000008000
-                hex 0004800000000000
-                hex 0000000000000000
-                hex 0000000000000000
-                hex 0000000000000000
-                hex 0000000000000000
-                hex 0000000000000000
-                hex 0000000000000000
-                hex 0000000000000000
-                hex 0000000000010000
-                hex 0003000000000000
-                hex 0000000000000000
-                hex 0000000000000000
-                hex 0000000000000000
-                hex 0000000000000000
-                hex 0000A80000560000
-*
 * DoPaint
 *
 *<sym>
