@@ -34,9 +34,7 @@ okheader
                 GP_call SetPort;MyPort
 *<sym>
 startimage
-
                 jsr Doimg 
-
                 ;jsr DoPaint
                 lda #0
                 sta quitflag
@@ -476,24 +474,24 @@ DoKey                                   ; test keys
                 cmp #"I" 
                 beq doInverse 
 *<sym>
-nextkey         cmp #$9B                ; escape 
+nextkey         cmp #$9B                ; escape : exit
                 beq exitDK
                 ;jsr clerscr
 
-                cmp #"c"
+                cmp #"c"                ; c for clear
                 beq doclear
                 cmp #"C"
                 beq doclear
-                rts                     ; else do nothing
+                rts                     ; none of these keys : do nothing
 *<sym>
 doclear
-                jsr clerscr
+                jsr clerscr             ; call clear screen proc.
                 rts
 *<sym>
 exitDK          lda #1                  ; escape : set quit flag
                 sta quitflag
                 rts
-        
+   
 *<sym>
 doInverse
                 lda inverse
