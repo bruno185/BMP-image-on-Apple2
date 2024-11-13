@@ -299,26 +299,26 @@
   296 |  1 asmdemo.s     41 | Comment     | 11 |         |    0 | 00/8000               | *
   297 |  1 asmdemo.s     42 | Directive   | 11 |         |    0 | 00/8000               |                      org      $E00                 
   298 |  1 asmdemo.s     43 | Empty       | 11 |         |    0 | 00/0E00               |                                                    
-  299 |  1 asmdemo.s     44 | Code        | 11 |         |    2 | 00/0E00 : A9 04       |                      lda      #4                   
-  300 |  1 asmdemo.s     45 | Code        | 11 |         |    3 | 00/0E02 : 20 F5 BE    |                      jsr      {$bef5}              
+  299 |  1 asmdemo.s     44 | Code        | 11 |         |    2 | 00/0E00 : A9 04       |                      lda      #4                   ; get 4 pages for 1024 file buffer
+  300 |  1 asmdemo.s     45 | Code        | 11 |         |    3 | 00/0E02 : 20 F5 BE    |                      jsr      {$bef5}              ; needed by MLI OPEN
   301 |  1 asmdemo.s     46 | Code        | 11 |         |    2 | 00/0E05 : 90 03       |                      bcc      GetbufOK             
   302 |  1 asmdemo.s     47 | Code        | 11 |         |    3 | 00/0E07 : 4C 04 0F    |                      jmp      dataerr              
   303 |  1 asmdemo.s     48 | Empty       | 11 |         |    0 | 00/0E0A               |                                                    
   304 |  1 asmdemo.s     49 | Comment     | 11 |         |    0 | 00/0E0A               | *<sym>
   305 |  1 asmdemo.s     50 | Empty       | 11 |         |    0 | 00/0E0A               | GetbufOK                                           
-  306 |  1 asmdemo.s     51 | Code        | 11 |         |    3 | 00/0E0A : 8D 49 15    |                      sta      fbuff+1              
-  307 |  1 asmdemo.s     52 | Code        | 11 |         |    3 | 00/0E0D : 20 F0 14    |                      jsr      doprefix             
+  306 |  1 asmdemo.s     51 | Code        | 11 |         |    3 | 00/0E0A : 8D 49 15    |                      sta      fbuff+1              ; set file buffer for OPEN param
+  307 |  1 asmdemo.s     52 | Code        | 11 |         |    3 | 00/0E0D : 20 F0 14    |                      jsr      doprefix             ; set prefix
   308 |  1 asmdemo.s     53 | Code        | 11 |         |    2 | 00/0E10 : 90 03       |                      bcc      doprefixOK           
   309 |  1 asmdemo.s     54 | Code        | 11 |         |    3 | 00/0E12 : 4C 04 0F    |                      jmp      dataerr              
   310 |  1 asmdemo.s     55 | Comment     | 11 |         |    0 | 00/0E15               | *<sym>
   311 |  1 asmdemo.s     56 | Empty       | 11 |         |    0 | 00/0E15               | doprefixOK                                         
   312 |  1 asmdemo.s     57 | Empty       | 11 |         |    0 | 00/0E15               |                                                    
-  313 |  1 asmdemo.s     58 | Code        | 11 |         |    3 | 00/0E15 : 20 24 14    |                      jsr      openBMP              
+  313 |  1 asmdemo.s     58 | Code        | 11 |         |    3 | 00/0E15 : 20 24 14    |                      jsr      openBMP              ; open and load BMP file in memory
   314 |  1 asmdemo.s     59 | Code        | 11 |         |    2 | 00/0E18 : 90 03       |                      bcc      BMPok                
   315 |  1 asmdemo.s     60 | Code        | 11 |         |    3 | 00/0E1A : 4C 04 0F    |                      jmp      dataerr              ; exit with error
   316 |  1 asmdemo.s     61 | Comment     | 11 |         |    0 | 00/0E1D               | *<sym>
   317 |  1 asmdemo.s     62 | Empty       | 11 |         |    0 | 00/0E1D               | BMPok                                              
-  318 |  1 asmdemo.s     63 | Code        | 11 |         |    3 | 00/0E1D : 20 4E 0E    |                      jsr      DoHeader             
+  318 |  1 asmdemo.s     63 | Code        | 11 |         |    3 | 00/0E1D : 20 4E 0E    |                      jsr      DoHeader             ; check header of BMP file in memory
   319 |  1 asmdemo.s     64 | Code        | 11 |         |    2 | 00/0E20 : 90 03       |                      bcc      headerOK             ; exit on error if carry set
   320 |  1 asmdemo.s     65 | Code        | 11 |         |    3 | 00/0E22 : 4C 04 0F    |                      jmp      dataerr              ; exit with error
   321 |  1 asmdemo.s     66 | Comment     | 11 |         |    0 | 00/0E25               | *<sym>
@@ -343,8 +343,8 @@
   340 |  1 asmdemo.s     76 | Code        | 11 |         |    3 | 00/0E3C : 8D 38 0F    |                      sta      quitflag             
   341 |  1 asmdemo.s     77 | Code        | 11 |         |    3 | 00/0E3F : 20 DC 11    |                      jsr      WaitForKeyPress      ;
   342 |  1 asmdemo.s     78 | Code        | 11 |         |    3 | 00/0E42 : 20 FC 10    |                      jsr      DoKey                ; process key
-  343 |  1 asmdemo.s     79 | Code        | 11 |         |    3 | 00/0E45 : AD 38 0F    |                      lda      quitflag             ; test quit flage
-  344 |  1 asmdemo.s     80 | Code        | 11 |         |    2 | 00/0E48 : F0 ED       |                      beq      startimage           ; if 0, loop
+  343 |  1 asmdemo.s     79 | Code        | 11 |         |    3 | 00/0E45 : AD 38 0F    |                      lda      quitflag             ; test quit flag (=1 if escape key)
+  344 |  1 asmdemo.s     80 | Code        | 11 |         |    2 | 00/0E48 : F0 ED       |                      beq      startimage           ; if 0 then loop
   345 |  1 asmdemo.s     81 | Code        | 11 |         |    3 | 00/0E4A : 20 80 14    |                      jsr      DoTextScreen         ; else set text screen
   346 |  1 asmdemo.s     82 | Code        | 11 |         |    1 | 00/0E4D : 60          |                      rts                           ; END OF PROGRAM (without error)
   347 |  1 asmdemo.s     83 | Comment     | 11 |         |    0 | 00/0E4E               | *
