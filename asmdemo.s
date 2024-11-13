@@ -4,15 +4,23 @@
 *                                                   *  
 * * * * * * * * * * * * * * * * * * * * * * * * * * *  
 *
-* BMP file must be loaded before this program is called.
-* Typically by STARTUP Basic program (ProDOS)
-* BMP image must have 1 bit per pixel
-* Dimension must not exceed 280 x 192
-* Every bit (= pixel) in BMP file is doubled horizontally 
+* BMP is loaded by this program, and tests are performed :
+        * BMP image must have 1 bit per pixel
+        * Dimension must not exceed 280 x 192
+        * Every bit (= pixel) in BMP file is doubled horizontally 
 * to respect image aspect ratio (more or less)
 * The image is drawn line by line, using PaintBits function of Graphics Primitives package
 *
 *
+* Memory :
+* STARTUP (Basic) : $801 
+* Font : $800 : destroy STARTUP !
+* Program : $E00 - $1FFF
+* Screen : $2000 - $3FFF
+* GP Library : $4000 - $5FFF
+* BMP Image : $6000 - $7FFF
+* grafport storage : $8000
+
 *<sym>
 GP_call     MAC                                         ; call to graphic primitives (macro)
                 jsr GrafMLI                             ; graphic primitives only entry point
@@ -32,26 +40,46 @@ ptr             equ $06
 **************************** MAIN PROGRAM ****************************
 *
                 org $E00
-                jsr DoHeader
-                bcc okheader              ; exit on error if carry set
-                rts
+
+                lda #4                  ; get 4 pages for 1024 file buffer 
+                jsr GETBUFR             ; needed by MLI OPEN
+                bcc GetbufOK
+                jmp dataerr
+
 *<sym>
-okheader
-                GP_call InitGraf;0
+GetbufOK
+                sta fbuff+1             ; set file buffer for OPEN param 
+                jsr doprefix            ; set prefix 
+                bcc doprefixOK
+                jmp dataerr
+*<sym>
+doprefixOK
+
+                jsr openBMP             ; open and load BMP file in memory
+                bcc BMPok
+                jmp dataerr             ; exit with error
+*<sym>
+BMPok
+                jsr DoHeader            ; check header of BMP file in memory
+                bcc headerOK            ; exit on error if carry set
+                jmp dataerr             ; exit with error
+*<sym>
+headerOK
+                GP_call InitGraf;0              ; go dhgr
                 GP_call InitPort;MyPort
                 GP_call SetPort;MyPort
 *<sym>
 startimage
-                jsr Doimg 
+                jsr Doimg               ; display image 
                 ;jsr DoPaint
-                lda #0
+                lda #0                  ; init quif flag
                 sta quitflag
-                jsr WaitForKeyPress
-                jsr DoKey
-                lda quitflag
-                beq startimage
-                jsr DoTextScreen
-                rts
+                jsr WaitForKeyPress     ; 
+                jsr DoKey               ; process key 
+                lda quitflag            ; test quit flag (=1 if escape key)
+                beq startimage          ; if 0 then loop 
+                jsr DoTextScreen        ; else set text screen
+                rts                     ; END OF PROGRAM (without error)
 *
 *********************************************************************
 *
@@ -80,8 +108,8 @@ oksign
                 bne higher
                 beq samelength
 *<sym>
-higher          jmp dataerr             ; size is too big
-                sec
+higher
+                sec                     ; size is too big
                 rts
 *<sym>
 samelength                              ; file length = max : OK
@@ -110,8 +138,8 @@ lower                                   ; file length < max : OK
                 bne badw
                 beq goodw
 *<sym>
-badw            jmp dataerr
-                sec
+badw            
+                sec                     ; width is too large 
                 rts
 *<sym>
 goodw
@@ -129,7 +157,8 @@ goodh
                 lda bmp,x               ; get value
                 cmp #1                  ; must be 1 
                 beq gooddepth
-                jmp dataerr
+                sec                     ; <> 1 bit per pixel 
+                rts
 *<sym>
 gooddepth            
                 ldx #$A                 ; get image offset in BMP header
@@ -172,10 +201,18 @@ imgdata
 TestSignature
                 lda bmp                 ; test signature
                 cmp #'B'
-                bne dataerr
+                bne errSign
                 lda bmp+1
                 cmp #'M'
-                beq bmpOK
+                beq signatureOK
+*<sym>
+errSign         sec
+                rts
+*<sym>
+signatureOK     clc
+                rts
+
+* * * * Exit with an error * * * * 
 *<sym>
 dataerr         jsr DoTextScreen        ; bad signature
                 ldx #0
@@ -186,14 +223,12 @@ printchar       lda errmsg,x
                 inx 
                 jmp printchar
 *<sym>
-errend          jsr crout 
-                sec
+errend          jsr crout
                 rts
+* * * * * * * * * * * * * * * * *
+
 *<sym>
-bmpOK           clc
-                rts
-*<sym>
-errmsg          asc "Error"
+errmsg          asc "Error !"
                 dfb 0
 *
 * Doimg
@@ -246,7 +281,6 @@ flipflop        db 1                    ; used to double pixels horizontally
 quitflag        ds 1                    ; to ckeck if user press escape key
 
 ******** line grafport ********
-*<m2>
 *<sym>
 imageLine       dw 0,0                  ; view location on current port
 *<sym>
@@ -255,7 +289,6 @@ imfbits         dw outbuff              ; bitmap pointer
 imgw            dw 0                    ; width of bitmap 
 *<sym>
 clipr           dw 0,0,0,0              ; clip rectangle
-*<m1>
 *<sym>
 outbuff         ds 80
 *<sym>
@@ -465,7 +498,6 @@ nextoutput
                 inc getoutbyte+2
 *<sym>
 nextoutputO     rts
-
 *<sym>
 drawImgLine
                 GP_call PaintBits;imageLine     ; dram a line of the image
@@ -474,7 +506,6 @@ drawImgLine
 *<syme>
 bmp             equ $6000               ; image is supposed to be loaded at $6000 
 
-*<bp>
 *<sym>
 DoKey                                   ; test keys
                 cmp #"i"                ; if i ou I : negate image
@@ -484,7 +515,6 @@ DoKey                                   ; test keys
 *<sym>
 nextkey         cmp #$9B                ; escape : exit
                 beq exitDK
-                ;jsr clerscr
 
                 cmp #"c"                ; c for clear
                 beq doclear
@@ -669,6 +699,67 @@ msglgth2        equ *-message3
 
 
 * ------------------ utils ------------------
+
+*<sym>
+testLength
+                lda filelength+2        ;       Byte 3 must 0 (else file size would be > $FFFF)            
+                beq :1
+                sec 
+                rts
+:1              
+                lda filelength+1        ; compare file length           
+                cmp #>maxlen            ; to maxlen
+                bne :2
+                lda filelength
+                cmp #<maxlen
+:2
+                bcc lowerlen            ; lower : OK
+                bne higherlen           ; higher : KO
+                beq lowerlen            ; = : OK
+*<sym>
+lowerlen        clc        
+                rts
+*<sym>
+higherlen
+                sec
+                rts
+
+* open BMP file
+
+*<sym>
+openBMP       
+                jsr MLI                 ; OPEN file 
+                dfb open
+                da  OPEN_parms 
+*<bp>
+                bcc GetEOF              ; no error, go on
+                rts
+*<sym>
+GetEOF 
+                lda ref                 ; get reference to file (got it in open mli call above)
+                sta refread             ; set it for reading 
+                sta refd1               ; set if for geteof
+
+                jsr MLI                 ; Call GetEOF to get length of file
+                dfb geteof
+                da GET_EOF_param
+                bcc geteofOK            ; if call was ok then go on
+                rts
+*<sym>
+geteofOK
+                jsr testLength          ; compare maxlen (max size for an image in memory ans size of BMP file
+                bcc LoadBMP             ; ok if file size < max size
+                rts
+
+*<sym>
+LoadBMP                                 ; read BMP file 
+                lda ref                 ; set reference to file (got it in open mli call above)
+                sta refread
+                jsr MLI
+                dfb read
+                da READ_param
+                rts
+
 * Clear DHGR screen   
 screenbase      equ $2000               ; address of screen memory    
 *<sym> 
@@ -767,3 +858,142 @@ loopbyte
 *<sym>
 mybyte         
                 ds 2
+*
+*
+*********** PREFIX *************
+* Set prefix using current préfix :
+* Call GETPREFIX, put it in "path" string
+* If no prefix (i.e. length of "path" string = 0),
+* then get préfix from last used disk, unsing ONLINE call
+* If any error, exit with carry set
+* else exit with carry clear
+*
+*<sym>
+doprefix
+                jsr MLI                 ; getprefix MLI call ; put prefix in "path"
+                dfb getprefix
+                da GET_PREFIX_param
+                bcc gpOk             
+                rts
+*<sym>
+gpOk
+                lda path                ; first char = length
+                beq noprefix            ; if length = 0 => no prefix
+                jmp prefixSetOK         ; else prefix already set, exit 
+*<sym>
+noprefix
+                lda devnum              ; last used slot/drive 
+                sta unit                ; param du mli online
+                jsr MLI
+                dfb online              ; on_line : get prefix in path
+                da ONLINE_param
+                bcc onlineOK
+                rts
+*<sym>
+onlineOK   
+                lda path
+                and #$0f               ; length in low nibble
+                sta path
+                tax
+*<sym>
+:1              lda path,x              ; shift prefix by one byte
+                sta path+1,x            ; 
+                dex
+                bne :1                  ; all string
+                inc path
+                inc path                ; length = length + 2
+                ldx path                ; 
+                lda #$af                ; = '/'
+                sta path,x              ; insert '/'' at the end
+                sta path+1              ; and '/'' at the beginning 
+
+                jsr MLI                 ; set_prefix (in the form : /prefix/)
+                dfb setprefix
+                da SET_PREFIX_param
+                bcc prefixSetOK
+                rts
+*<sym>
+prefixSetOK   
+                rts
+*
+*
+* * * * MLI Call READ parameters * * * * 
+*<sym>
+READ_param                              ; READ file
+                hex 04                  ; number of params.
+*<sym>
+refread         hex 00                  ; ref #
+*<sym>
+rdbuffa         da bmp
+*<sym>
+rreq            hex 0020                ; bytes requested
+*<sym>
+readlen         hex 0000                ; bytes read
+*
+* * * * MLI Call OPEN parameters * * * * 
+*<sym>
+OPEN_parms                                ; OPEN file for reading             
+                hex 03                  ; number of params.
+                da fname                ; path name
+*<sym>
+fbuff           hex 0000
+*<sym>
+ref             hex 00
+*<sym>
+fname           str 'IMG'
+*
+* * * * MLI Call GET_PREFIX parameters * * * * 
+*<sym>
+GET_PREFIX_param                        ; GET_PREFIX
+                hex 01                  ; number of params.
+                da path
+
+*
+* * * * MLI Call SET_PREFIX parameters * * * *
+*<sym>
+SET_PREFIX_param                        ; SET_PREFIX
+                hex 01                  ; number of params.
+                da path
+*
+*
+* * * * MLI Call ONLINE parameters * * * *
+*<sym>
+ONLINE_param                            ; ONLINE  
+                hex 02                  ; number of params.
+*<sym>
+unit            hex 00
+                da path
+*
+*<sym>
+path            ds 256                  ; storage for path
+*
+* * * * MLI Call GET_FILE_INFO parameters * * * *
+*<sym>
+GET_FILE_INFO_param                     ; GET_FILE_INFO
+                hex 0A
+                da path
+*<sym>
+access          hex 00
+*<sym>
+ftype           hex 00
+*<sym>
+auxtype         hex 0000
+*<sym>
+stotype         hex 00
+*<sym>
+blocks          hex 0000
+*<sym>
+date            hex 0000
+*<sym>
+time            hex 0000
+cdate           hex 0000
+ctime           hex 0000
+*
+* * * * MLI Call GET_EOF parameters * * * *
+*<sym>
+GET_EOF_param                           ; GET_EOF
+                hex 02
+*<sym>
+refd1           hex 00
+*<sym>
+filelength      ds 3

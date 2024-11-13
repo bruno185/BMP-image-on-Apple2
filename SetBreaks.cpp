@@ -11,7 +11,7 @@
 #include <algorithm> // needed for transform
 using namespace std;
 
-const int MAXBREAK = 100;          // max number of breaks in code
+const int MAXBREAK = 1000;          // max number of breaks in code
 const string tag = "<bp>";
 const string autoruntag = "bp ";
 const string tagm1 = "<m1>";
@@ -207,7 +207,7 @@ int main () {
             cout << m2str;
             autodebug_file_out << m2str;
     }
-    // write symbol  in output file 
+    // write symbol in output file 
     if (cursym >0) // = if a least 1 sym found   
         for (int i = 0; i < cursym; i++) {
         string tempo = "sym " + symlib[i] + " = " + sym[i] ;
