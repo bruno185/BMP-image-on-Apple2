@@ -1,16 +1,4 @@
 
-                                                
-Diplay a BMP image using Graphics Primitives      
-                                                  
- 
-*
-* BMP is loaded by this program, and tests are performed :
-        * BMP image must have 1 bit per pixel
-        * Dimension must not exceed 280 x 192
-        * Every bit (= pixel) in BMP file is doubled horizontally 
-* to respect image aspect ratio (more or less)
-* The image is drawn line by line, using PaintBits function of Graphics Primitives package
-
 # Apple II : Display a BMP image file using Graphics Primitives (in Mouse Graphics Toolkit) and Merlin32 syntax
 
 Here's a program for Apple II.
@@ -49,4 +37,6 @@ DoMerlin.bat puts it all together. If you want to compile yourself, you will hav
 
 DoMerlin.bat is to be placed in project directory.
 It compiles source (*.s) with Merlin32, copy 6502 binary to a disk image (containg ProDOS), and launch Applewin with this disk in S6,D1.
+
+
 
