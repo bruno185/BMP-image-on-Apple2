@@ -38,7 +38,16 @@ kbd             equ $C000       ; ascii code of last key pressed (+ 128 if strob
 kbdstrb         equ $C010
 col80off        equ $C00C
 col80on         equ $C00D
-80col           equ $C01F 	 
+80col           equ $C01F 
+
+graphics        equ $C050
+mixoff          equ $C052
+hires           equ $C057
+dhgr            equ $C05E
+page1           equ $C054
+page2           equ $C055
+
+vbl             equ $C019
 *
 ************ page 0 ************  
 cv              equ $25

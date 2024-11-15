@@ -37,7 +37,9 @@ ptr             equ $06
 **************************** MAIN PROGRAM ****************************
 *
                 org $E00
+                jsr DoTextScreen
 
+*<bp>
                 lda #4                  ; get 4 pages for 1024 file buffer 
                 jsr GETBUFR             ; needed by MLI OPEN
                 bcc GetbufOK            ; carry clear means no error in the following code
@@ -60,6 +62,9 @@ BMPok
                 jsr DoHeader            ; check header of BMP data and set vars
                 bcc headerOK            ; exit on error if carry set
                 jmp dataerr             ; exit with error
+
+*<bp>
+                
 *<sym>
 headerOK
                 GP_call InitGraf;0      ; go DHGR mode using Graphics Primitives library
@@ -67,7 +72,6 @@ headerOK
                 GP_call SetPort;MyPort
 *<sym>
 startimage
-*<bp>
                 jsr Doimg               ; display image 
                 lda #0                  ; init quif flag
                 sta quitflag
@@ -472,7 +476,7 @@ div4ok
 
                 lda #1
                 sta flipflop            ; reset toggle to double pixel width    
-*<bp>      
+    
                 inc lineCnt             ; inc line counter
                 lda lineCnt
                 cmp vdef                ; all lines done ?
@@ -626,7 +630,7 @@ lowerlen        clc
 higherlen
                 sec
                 rts
-
+*
 * open BMP file
 
 *<sym>
@@ -660,6 +664,17 @@ LoadBMP                                 ; read BMP file
                 jsr MLI
                 dfb read
                 da READ_param
+                rts
+
+* Set DHGR mode
+*<sym>
+dodhgr
+                sta graphics
+                sta hires
+                sta mixoff
+                sta dhgr
+                sta col80on
+                sta STORE80ON
                 rts
 
 * Clear DHGR screen   
