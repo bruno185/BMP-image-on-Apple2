@@ -67,6 +67,7 @@ headerOK
                 GP_call SetPort;MyPort
 *<sym>
 startimage
+*<bp>
                 jsr Doimg               ; display image 
                 lda #0                  ; init quif flag
                 sta quitflag
@@ -307,9 +308,8 @@ Doimg
 
                 jsr clearbuffer         ; clear line buffer
 
-                lda #$ff                ; init input line counter to -1
+                lda #$00                ; init line counter
                 sta lineCnt
-                lda #0
                 sta inputBitCnt         ; init input bit counter
                 sta inputBitCnt+1  
                 sta inputByteCnt        ; init # of byte in a row           
@@ -377,6 +377,8 @@ inversevideo
                 inc inputByteCnt        ; update counter
 
 * inner loop on pixels (= input bits)
+* Tranform a BMP image line into an image line un Apple II format.
+* Each BMP pixel is process twice for acpect ratio.
 *<sym>
 pixelloop
                 lda inbyte              ; reload input byte         
@@ -435,9 +437,12 @@ updateoutput    inc outputBitPos       ; get bit pos (output)
                 cmp hdef+1
                 bne nextpixel
 
+* Here, a line has been processed
+* It is drawn
+* Then variables must be reset for next line, if any.
 *<sym>  
 nextline                                ; yes : paint current line and prepare next one
-                jsr drawImgLine2       ; a line has been calcultated, paint it !!!
+                jsr drawImgLine       ; a line has been calcultated, paint it !!!
 
                 lda #<outbuff           ; reset pointer to beginning of output buffer
                 sta getoutbyte+1
@@ -445,9 +450,9 @@ nextline                                ; yes : paint current line and prepare n
                 sta getoutbyte+2 
                 jsr clearbuffer         ; zero ouput buffer 
 *<sym> 
-loopadjust                              ; in an image line, # of bytes must be divisible by 4
-                                        ; if not, padded with zeros to make it divisible by 4
-                                        ; so we need to jump over these useless bytes.
+loopadjust                              ; in an BMP image line, # of bytes must be divisible by 4
+                                        ; if not, it is padded with zeros to make it divisible by 4
+                                        ; so we need to jump over these useless bytes, if any.
                 lda inputByteCnt        ; get # of byte done in previous image line
                 and #3                  ; if this number is divisible by 4 
                 beq div4ok              ; go on
@@ -467,11 +472,14 @@ div4ok
 
                 lda #1
                 sta flipflop            ; reset toggle to double pixel width    
-      
+*<bp>      
                 inc lineCnt             ; inc line counter
                 lda lineCnt
                 cmp vdef                ; all lines done ?
-                beq endimage             ; yes : the image is finished !   
+                bcs suporeq             ; lineCnt >= vdef ?
+                jmp lineloop            ; no : loop
+*<sym>  
+suporeq         bne endimage            ; if not egal then lineCnt > vdef : end loop
                 jmp lineloop            ; no : loop for another image line
 *<sym>  
 endimage
@@ -509,17 +517,17 @@ drawImgLine                             ; draw line using Graphics Primitives
                 GP_call PaintBits;imageLine     ; dram a line of the image
                 dec imageLine+2
                 rts
-*<bp>
+
 *<sym>
 drawImgLine2                            ; draw line using direct access to memory   
                 lda imageLine+3         ; upper byte must be 0 
                 beq okYinf256           ; ok
                 rts                     ; else vertical position > 192 : exit
 *<sym>
-okYinf256       ldx imageLine+2         ; get Y pos of line
-                cpx #192
-                bcc okYinf192           ; chek < 192
-                rts                     ; exit il not
+okYinf256       ldx imageLine+2         ; get Y pos of current line
+                cpx #192                ; check if line # is < 192
+                bcc okYinf192           
+                rts                     ; exit if not
 *<sym>
 okYinf192       
                 lda lo,x                ; set pointer prt to memory address
@@ -532,11 +540,11 @@ okYinf192
 *<sym>
 pokeloop
                 lda outbuff,x
-                sta RAMWRTON
+                sta RAMWRTON            ; write in aux memory
                 sta (ptr),y 
-                sta RAMWRTOFF
+                sta RAMWRTOFF           ; write in main memory             
                 inx
-                cpx clipr+4
+                cpx imgw                ; end ond line ?
                 beq outloop 
                 lda outbuff,x 
                 sta (ptr),y 
@@ -544,13 +552,11 @@ pokeloop
                 inx 
                 cpx imgw
                 bne pokeloop
-
-
+*<sym>
 outloop
                 sta $C001
                 dec imageLine+2
                 rts
-
 *<syme>
 bmp             equ $6000               ; image is supposed to be loaded at $6000 
 
