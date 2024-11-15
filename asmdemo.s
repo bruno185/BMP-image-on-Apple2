@@ -442,7 +442,7 @@ updateoutput    inc outputBitPos       ; get bit pos (output)
 * Then variables must be reset for next line, if any.
 *<sym>  
 nextline                                ; yes : paint current line and prepare next one
-                jsr drawImgLine       ; a line has been calcultated, paint it !!!
+                jsr drawImgLine2       ; a line has been calcultated, paint it !!!
 
                 lda #<outbuff           ; reset pointer to beginning of output buffer
                 sta getoutbyte+1
@@ -536,7 +536,7 @@ okYinf192
                 sta ptr+1
                 ldx #0
                 ldy #0
-                sta $C000
+                sta STORE80OFF
 *<sym>
 pokeloop
                 lda outbuff,x
@@ -554,7 +554,7 @@ pokeloop
                 bne pokeloop
 *<sym>
 outloop
-                sta $C001
+                sta STORE80ON
                 dec imageLine+2
                 rts
 *<syme>

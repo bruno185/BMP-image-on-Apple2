@@ -739,7 +739,7 @@
   706 |  1 asmdemo.s    442 | Comment     | 11 |         |    0 | 00/10AB               | * Then variables must be reset for next line, if any.
   707 |  1 asmdemo.s    443 | Comment     | 11 |         |    0 | 00/10AB               | *<sym>  
   708 |  1 asmdemo.s    444 | Empty       | 11 |         |    0 | 00/10AB               | nextline                                           ; yes : paint current line and prepare next one
-  709 |  1 asmdemo.s    445 | Code        | 11 |         |    3 | 00/10AB : 20 24 11    |                      jsr      drawImgLine          ; a line has been calcultated, paint it !!!
+  709 |  1 asmdemo.s    445 | Code        | 11 |         |    3 | 00/10AB : 20 2E 11    |                      jsr      drawImgLine2         ; a line has been calcultated, paint it !!!
   710 |  1 asmdemo.s    446 | Empty       | 11 |         |    0 | 00/10AE               |                                                    
   711 |  1 asmdemo.s    447 | Code        | 11 |         |    2 | 00/10AE : A9 78       |                      lda      #<outbuff            ; reset pointer to beginning of output buffer
   712 |  1 asmdemo.s    448 | Code        | 11 |         |    3 | 00/10B0 : 8D 50 10    |                      sta      getoutbyte+1         
@@ -836,7 +836,7 @@
   803 |  1 asmdemo.s    536 | Code        | 11 |         |    2 | 00/1144 : 85 07       |                      sta      {$06}+1              
   804 |  1 asmdemo.s    537 | Code        | 11 |         |    2 | 00/1146 : A2 00       |                      ldx      #0                   
   805 |  1 asmdemo.s    538 | Code        | 11 |         |    2 | 00/1148 : A0 00       |                      ldy      #0                   
-  806 |  1 asmdemo.s    539 | Code        | 11 |         |    3 | 00/114A : 8D 00 C0    |                      sta      $C000                
+  806 |  1 asmdemo.s    539 | Code        | 11 |         |    3 | 00/114A : 8D 00 C0    |                      sta      {$C000}              
   807 |  1 asmdemo.s    540 | Comment     | 11 |         |    0 | 00/114D               | *<sym>
   808 |  1 asmdemo.s    541 | Empty       | 11 |         |    0 | 00/114D               | pokeloop                                           
   809 |  1 asmdemo.s    542 | Code        | 11 |         |    3 | 00/114D : BD 78 0F    |                      lda      outbuff,x            
@@ -854,7 +854,7 @@
   821 |  1 asmdemo.s    554 | Code        | 11 |         |    2 | 00/1168 : D0 E3       |                      bne      pokeloop             
   822 |  1 asmdemo.s    555 | Comment     | 11 |         |    0 | 00/116A               | *<sym>
   823 |  1 asmdemo.s    556 | Empty       | 11 |         |    0 | 00/116A               | outloop                                            
-  824 |  1 asmdemo.s    557 | Code        | 11 |         |    3 | 00/116A : 8D 01 C0    |                      sta      $C001                
+  824 |  1 asmdemo.s    557 | Code        | 11 |         |    3 | 00/116A : 8D 01 C0    |                      sta      {$C001}              
   825 |  1 asmdemo.s    558 | Code        | 11 |         |    3 | 00/116D : CE 6A 0F    |                      dec      imageLine+2          
   826 |  1 asmdemo.s    559 | Code        | 11 |         |    1 | 00/1170 : 60          |                      rts                           
   827 |  1 asmdemo.s    560 | Comment     | 11 |         |    0 | 00/1171               | *<syme>
