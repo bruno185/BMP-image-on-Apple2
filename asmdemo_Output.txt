@@ -304,33 +304,33 @@
   301 |  1 asmdemo.s     37 | Comment     | 11 |         |    0 | 00/8000               | **************************** MAIN PROGRAM ****************************
   302 |  1 asmdemo.s     38 | Comment     | 11 |         |    0 | 00/8000               | *
   303 |  1 asmdemo.s     39 | Directive   | 11 |         |    0 | 00/8000               |                      org      $E00                 
-  304 |  1 asmdemo.s     40 | Code        | 11 |         |    3 | 00/0E00 : 20 33 12    |                      jsr      DoTextScreen         
-  305 |  1 asmdemo.s     41 | Empty       | 11 |         |    0 | 00/0E03               |                                                    
-  306 |  1 asmdemo.s     42 | Comment     | 11 |         |    0 | 00/0E03               | *<bp>
-  307 |  1 asmdemo.s     43 | Code        | 11 |         |    2 | 00/0E03 : A9 04       |                      lda      #4                   ; get 4 pages for 1024 file buffer
-  308 |  1 asmdemo.s     44 | Code        | 11 |         |    3 | 00/0E05 : 20 F5 BE    |                      jsr      {$bef5}              ; needed by MLI OPEN
-  309 |  1 asmdemo.s     45 | Code        | 11 |         |    2 | 00/0E08 : 90 03       |                      bcc      GetbufOK             ; carry clear means no error in the following code
-  310 |  1 asmdemo.s     46 | Code        | 11 |         |    3 | 00/0E0A : 4C 12 0F    |                      jmp      dataerr              ; carry set means error
-  311 |  1 asmdemo.s     47 | Empty       | 11 |         |    0 | 00/0E0D               |                                                    
-  312 |  1 asmdemo.s     48 | Comment     | 11 |         |    0 | 00/0E0D               | *<sym>
-  313 |  1 asmdemo.s     49 | Empty       | 11 |         |    0 | 00/0E0D               | GetbufOK                                           
-  314 |  1 asmdemo.s     50 | Code        | 11 |         |    3 | 00/0E0D : 8D FC 12    |                      sta      fbuff+1              ; set file buffer for OPEN param
-  315 |  1 asmdemo.s     51 | Code        | 11 |         |    3 | 00/0E10 : 20 A3 12    |                      jsr      doprefix             ; set prefix
-  316 |  1 asmdemo.s     52 | Code        | 11 |         |    2 | 00/0E13 : 90 03       |                      bcc      doprefixOK           
-  317 |  1 asmdemo.s     53 | Code        | 11 |         |    3 | 00/0E15 : 4C 12 0F    |                      jmp      dataerr              
-  318 |  1 asmdemo.s     54 | Comment     | 11 |         |    0 | 00/0E18               | *<sym>
-  319 |  1 asmdemo.s     55 | Empty       | 11 |         |    0 | 00/0E18               | doprefixOK                                         
-  320 |  1 asmdemo.s     56 | Empty       | 11 |         |    0 | 00/0E18               |                                                    
-  321 |  1 asmdemo.s     57 | Code        | 11 |         |    3 | 00/0E18 : 20 C4 11    |                      jsr      openBMP              ; open and load BMP file in memory
-  322 |  1 asmdemo.s     58 | Code        | 11 |         |    2 | 00/0E1B : 90 03       |                      bcc      BMPok                
-  323 |  1 asmdemo.s     59 | Code        | 11 |         |    3 | 00/0E1D : 4C 12 0F    |                      jmp      dataerr              ; exit with error
-  324 |  1 asmdemo.s     60 | Comment     | 11 |         |    0 | 00/0E20               | *<sym>
-  325 |  1 asmdemo.s     61 | Empty       | 11 |         |    0 | 00/0E20               | BMPok                                              
-  326 |  1 asmdemo.s     62 | Code        | 11 |         |    3 | 00/0E20 : 20 51 0E    |                      jsr      DoHeader             ; check header of BMP data and set vars
-  327 |  1 asmdemo.s     63 | Code        | 11 |         |    2 | 00/0E23 : 90 03       |                      bcc      headerOK             ; exit on error if carry set
-  328 |  1 asmdemo.s     64 | Code        | 11 |         |    3 | 00/0E25 : 4C 12 0F    |                      jmp      dataerr              ; exit with error
-  329 |  1 asmdemo.s     65 | Empty       | 11 |         |    0 | 00/0E28               |                                                    
-  330 |  1 asmdemo.s     66 | Comment     | 11 |         |    0 | 00/0E28               | *<bp>
+  304 |  1 asmdemo.s     40 | Empty       | 11 |         |    0 | 00/0E00               |                                                    
+  305 |  1 asmdemo.s     41 | Comment     | 11 |         |    0 | 00/0E00               | *<bp> : set a beak point here for ApleWin, using SetBreaks.exe (see SetBreaks.cpp)
+  306 |  1 asmdemo.s     42 | Empty       | 11 |         |    0 | 00/0E00               |                                                    
+  307 |  1 asmdemo.s     43 | Code        | 11 |         |    3 | 00/0E00 : 20 1C 12    |                      jsr      clearscrn            ; clear dhgr screen before displaying it
+  308 |  1 asmdemo.s     44 | Empty       | 11 |         |    0 | 00/0E03               |                                                    
+  309 |  1 asmdemo.s     45 | Code        | 11 |         |    2 | 00/0E03 : A9 04       |                      lda      #4                   ; get 4 pages for 1024 file buffer
+  310 |  1 asmdemo.s     46 | Code        | 11 |         |    3 | 00/0E05 : 20 F5 BE    |                      jsr      {$bef5}              ; needed by MLI OPEN
+  311 |  1 asmdemo.s     47 | Code        | 11 |         |    2 | 00/0E08 : 90 03       |                      bcc      GetbufOK             ; carry clear means no error in the following code
+  312 |  1 asmdemo.s     48 | Code        | 11 |         |    3 | 00/0E0A : 4C 12 0F    |                      jmp      dataerr              ; carry set means error
+  313 |  1 asmdemo.s     49 | Empty       | 11 |         |    0 | 00/0E0D               |                                                    
+  314 |  1 asmdemo.s     50 | Comment     | 11 |         |    0 | 00/0E0D               | *<sym>
+  315 |  1 asmdemo.s     51 | Empty       | 11 |         |    0 | 00/0E0D               | GetbufOK                                           
+  316 |  1 asmdemo.s     52 | Code        | 11 |         |    3 | 00/0E0D : 8D 0D 13    |                      sta      fbuff+1              ; set file buffer for OPEN param
+  317 |  1 asmdemo.s     53 | Code        | 11 |         |    3 | 00/0E10 : 20 B4 12    |                      jsr      doprefix             ; set prefix
+  318 |  1 asmdemo.s     54 | Code        | 11 |         |    2 | 00/0E13 : 90 03       |                      bcc      doprefixOK           
+  319 |  1 asmdemo.s     55 | Code        | 11 |         |    3 | 00/0E15 : 4C 12 0F    |                      jmp      dataerr              
+  320 |  1 asmdemo.s     56 | Comment     | 11 |         |    0 | 00/0E18               | *<sym>
+  321 |  1 asmdemo.s     57 | Empty       | 11 |         |    0 | 00/0E18               | doprefixOK                                         
+  322 |  1 asmdemo.s     58 | Empty       | 11 |         |    0 | 00/0E18               |                                                    
+  323 |  1 asmdemo.s     59 | Code        | 11 |         |    3 | 00/0E18 : 20 CC 11    |                      jsr      openBMP              ; open and load BMP file in memory
+  324 |  1 asmdemo.s     60 | Code        | 11 |         |    2 | 00/0E1B : 90 03       |                      bcc      BMPok                
+  325 |  1 asmdemo.s     61 | Code        | 11 |         |    3 | 00/0E1D : 4C 12 0F    |                      jmp      dataerr              ; exit with error
+  326 |  1 asmdemo.s     62 | Comment     | 11 |         |    0 | 00/0E20               | *<sym>
+  327 |  1 asmdemo.s     63 | Empty       | 11 |         |    0 | 00/0E20               | BMPok                                              
+  328 |  1 asmdemo.s     64 | Code        | 11 |         |    3 | 00/0E20 : 20 51 0E    |                      jsr      DoHeader             ; check header of BMP data and set vars
+  329 |  1 asmdemo.s     65 | Code        | 11 |         |    2 | 00/0E23 : 90 03       |                      bcc      headerOK             ; exit on error if carry set
+  330 |  1 asmdemo.s     66 | Code        | 11 |         |    3 | 00/0E25 : 4C 12 0F    |                      jmp      dataerr              ; exit with error
   331 |  1 asmdemo.s     67 | Empty       | 11 |         |    0 | 00/0E28               |                                                    
   332 |  1 asmdemo.s     68 | Comment     | 11 |         |    0 | 00/0E28               | *<sym>
   333 |  1 asmdemo.s     69 | Empty       | 11 |         |    0 | 00/0E28               | headerOK                                           
@@ -351,11 +351,11 @@
   348 |  1 asmdemo.s     75 | Code        | 11 |         |    3 | 00/0E3A : 20 CD 0F    |                      jsr      Doimg                ; display image
   349 |  1 asmdemo.s     76 | Code        | 11 |         |    2 | 00/0E3D : A9 00       |                      lda      #0                   ; init quif flag
   350 |  1 asmdemo.s     77 | Code        | 11 |         |    3 | 00/0E3F : 8D 6A 0F    |                      sta      quitflag             
-  351 |  1 asmdemo.s     78 | Code        | 11 |         |    3 | 00/0E42 : 20 9E 11    |                      jsr      WaitForKeyPress      ;
+  351 |  1 asmdemo.s     78 | Code        | 11 |         |    3 | 00/0E42 : 20 A6 11    |                      jsr      WaitForKeyPress      ;
   352 |  1 asmdemo.s     79 | Code        | 11 |         |    3 | 00/0E45 : 20 74 11    |                      jsr      DoKey                ; process key
   353 |  1 asmdemo.s     80 | Code        | 11 |         |    3 | 00/0E48 : AD 6A 0F    |                      lda      quitflag             ; test quit flag (=1 if escape key)
   354 |  1 asmdemo.s     81 | Code        | 11 |         |    2 | 00/0E4B : F0 ED       |                      beq      startimage           ; if 0 then loop
-  355 |  1 asmdemo.s     82 | Code        | 11 |         |    3 | 00/0E4D : 20 33 12    |                      jsr      DoTextScreen         ; else set text screen
+  355 |  1 asmdemo.s     82 | Code        | 11 |         |    3 | 00/0E4D : 20 44 12    |                      jsr      DoTextScreen         ; else set text screen
   356 |  1 asmdemo.s     83 | Code        | 11 |         |    1 | 00/0E50 : 60          |                      rts                           ; END OF PROGRAM (without error)
   357 |  1 asmdemo.s     84 | Comment     | 11 |         |    0 | 00/0E51               | *
   358 |  1 asmdemo.s     85 | Comment     | 11 |         |    0 | 00/0E51               | *********************************************************************
@@ -496,7 +496,7 @@
   493 |  1 asmdemo.s    220 | Empty       | 11 |         |    0 | 00/0F12               |                                                    
   494 |  1 asmdemo.s    221 | Comment     | 11 |         |    0 | 00/0F12               | * * * * Exit with an error * * * * 
   495 |  1 asmdemo.s    222 | Comment     | 11 |         |    0 | 00/0F12               | *<sym>
-  496 |  1 asmdemo.s    223 | Code        | 11 |         |    3 | 00/0F12 : 20 33 12    | dataerr              jsr      DoTextScreen         ; bad signature
+  496 |  1 asmdemo.s    223 | Code        | 11 |         |    3 | 00/0F12 : 20 44 12    | dataerr              jsr      DoTextScreen         ; bad signature
   497 |  1 asmdemo.s    224 | Code        | 11 |         |    2 | 00/0F15 : A2 00       |                      ldx      #0                   
   498 |  1 asmdemo.s    225 | Comment     | 11 |         |    0 | 00/0F17               | *<sym>
   499 |  1 asmdemo.s    226 | Code        | 11 |         |    3 | 00/0F17 : BD 4B 0F    | printchar            lda      errmsg,x             
@@ -616,7 +616,7 @@
   583 |  1 asmdemo.s    310 | Empty       | 11 |         |    0 | 00/0FCD               | Doimg                                              
   584 |  1 asmdemo.s    311 | Comment     | 11 |         |    0 | 00/0FCD               | ***** init *****
   585 |  1 asmdemo.s    312 | Empty       | 11 |         |    0 | 00/0FCD               |                                                    
-  586 |  1 asmdemo.s    313 | Code        | 11 |         |    3 | 00/0FCD : 20 55 12    |                      jsr      clearbuffer          ; clear line buffer
+  586 |  1 asmdemo.s    313 | Code        | 11 |         |    3 | 00/0FCD : 20 66 12    |                      jsr      clearbuffer          ; clear line buffer
   587 |  1 asmdemo.s    314 | Empty       | 11 |         |    0 | 00/0FD0               |                                                    
   588 |  1 asmdemo.s    315 | Code        | 11 |         |    2 | 00/0FD0 : A9 00       |                      lda      #$00                 ; init line counter
   589 |  1 asmdemo.s    316 | Code        | 11 |         |    3 | 00/0FD2 : 8D 53 0F    |                      sta      lineCnt              
@@ -648,7 +648,7 @@
   615 |  1 asmdemo.s    342 | Empty       | 11 |         |    0 | 00/1006               | getwidth                                           
   616 |  1 asmdemo.s    343 | Code        | 11 |         |    3 | 00/1006 : AD F8 0E    |                      lda      hdef                 
   617 |  1 asmdemo.s    344 | Code        | 11 |         |    3 | 00/1009 : AE F9 0E    |                      ldx      hdef+1               
-  618 |  1 asmdemo.s    345 | Code        | 11 |         |    3 | 00/100C : 20 79 12    |                      jsr      computeBytes         
+  618 |  1 asmdemo.s    345 | Code        | 11 |         |    3 | 00/100C : 20 8A 12    |                      jsr      computeBytes         
   619 |  1 asmdemo.s    346 | Code        | 11 |         |    3 | 00/100F : 8E 68 0F    |                      stx      bitmapwidth          
   620 |  1 asmdemo.s    347 | Comment     | 11 |         |    0 | 00/1012               | *<sym>
   621 |  1 asmdemo.s    348 | Empty       | 11 |         |    0 | 00/1012               | setline                                            
@@ -758,7 +758,7 @@
   725 |  1 asmdemo.s    452 | Code        | 11 |         |    3 | 00/10B3 : 8D 53 10    |                      sta      getoutbyte+1         
   726 |  1 asmdemo.s    453 | Code        | 11 |         |    2 | 00/10B6 : A9 0F       |                      lda      #>outbuff            
   727 |  1 asmdemo.s    454 | Code        | 11 |         |    3 | 00/10B8 : 8D 54 10    |                      sta      getoutbyte+2         
-  728 |  1 asmdemo.s    455 | Code        | 11 |         |    3 | 00/10BB : 20 55 12    |                      jsr      clearbuffer          ; zero ouput buffer
+  728 |  1 asmdemo.s    455 | Code        | 11 |         |    3 | 00/10BB : 20 66 12    |                      jsr      clearbuffer          ; zero ouput buffer
   729 |  1 asmdemo.s    456 | Comment     | 11 |         |    0 | 00/10BE               | *<sym> 
   730 |  1 asmdemo.s    457 | Empty       | 11 |         |    0 | 00/10BE               | loopadjust                                         ; in an BMP image line, # of bytes must be divisible by 4
   731 |  1 asmdemo.s    458 | Comment     | 11 |         |    0 | 00/10BE               |                                         ; if not, it is padded with zeros to make it divisible by 4
@@ -843,9 +843,9 @@
   810 |  1 asmdemo.s    534 | Code        | 11 |         |    1 | 00/113E : 60          |                      rts                           ; exit if not
   811 |  1 asmdemo.s    535 | Comment     | 11 |         |    0 | 00/113F               | *<sym>
   812 |  1 asmdemo.s    536 | Empty       | 11 |         |    0 | 00/113F               | okYinf192                                          
-  813 |  1 asmdemo.s    537 | Code        | 11 |         |    3 | 00/113F : BD E3 14    |                      lda      lo,x                 ; set pointer prt to memory address
+  813 |  1 asmdemo.s    537 | Code        | 11 |         |    3 | 00/113F : BD F6 14    |                      lda      lo,x                 ; set pointer prt to memory address
   814 |  1 asmdemo.s    538 | Code        | 11 |         |    2 | 00/1142 : 85 06       |                      sta      {$06}                ; of this image line
-  815 |  1 asmdemo.s    539 | Code        | 11 |         |    3 | 00/1144 : BD 23 14    |                      lda      hi,x                 
+  815 |  1 asmdemo.s    539 | Code        | 11 |         |    3 | 00/1144 : BD 36 14    |                      lda      hi,x                 
   816 |  1 asmdemo.s    540 | Code        | 11 |         |    2 | 00/1147 : 85 07       |                      sta      {$06}+1              
   817 |  1 asmdemo.s    541 | Code        | 11 |         |    2 | 00/1149 : A2 00       |                      ldx      #0                   
   818 |  1 asmdemo.s    542 | Code        | 11 |         |    2 | 00/114B : A0 00       |                      ldy      #0                   
@@ -876,517 +876,535 @@
   843 |  1 asmdemo.s    567 | Comment     | 11 |         |    0 | 00/1174               | *<sym>
   844 |  1 asmdemo.s    568 | Empty       | 11 |         |    0 | 00/1174               | DoKey                                              ; test keys
   845 |  1 asmdemo.s    569 | Code        | 11 |         |    2 | 00/1174 : C9 E9       |                      cmp      #"i"                 ; if i ou I : negate image
-  846 |  1 asmdemo.s    570 | Code        | 11 |         |    2 | 00/1176 : F0 1B       |                      beq      doInverse            
+  846 |  1 asmdemo.s    570 | Code        | 11 |         |    2 | 00/1176 : F0 23       |                      beq      doInverse            
   847 |  1 asmdemo.s    571 | Code        | 11 |         |    2 | 00/1178 : C9 C9       |                      cmp      #"I"                 
-  848 |  1 asmdemo.s    572 | Code        | 11 |         |    2 | 00/117A : F0 17       |                      beq      doInverse            
+  848 |  1 asmdemo.s    572 | Code        | 11 |         |    2 | 00/117A : F0 1F       |                      beq      doInverse            
   849 |  1 asmdemo.s    573 | Comment     | 11 |         |    0 | 00/117C               | *<sym>
   850 |  1 asmdemo.s    574 | Code        | 11 |         |    2 | 00/117C : C9 9B       | nextkey              cmp      #$9B                 ; escape : exit
-  851 |  1 asmdemo.s    575 | Code        | 11 |         |    2 | 00/117E : F0 0D       |                      beq      exitDK               
+  851 |  1 asmdemo.s    575 | Code        | 11 |         |    2 | 00/117E : F0 15       |                      beq      exitDK               
   852 |  1 asmdemo.s    576 | Empty       | 11 |         |    0 | 00/1180               |                                                    
   853 |  1 asmdemo.s    577 | Code        | 11 |         |    2 | 00/1180 : C9 E3       |                      cmp      #"c"                 ; c for clear
-  854 |  1 asmdemo.s    578 | Code        | 11 |         |    2 | 00/1182 : F0 05       |                      beq      doclear              
+  854 |  1 asmdemo.s    578 | Code        | 11 |         |    2 | 00/1182 : F0 08       |                      beq      doclear              
   855 |  1 asmdemo.s    579 | Code        | 11 |         |    2 | 00/1184 : C9 C3       |                      cmp      #"C"                 
-  856 |  1 asmdemo.s    580 | Code        | 11 |         |    2 | 00/1186 : F0 01       |                      beq      doclear              
-  857 |  1 asmdemo.s    581 | Code        | 11 |         |    1 | 00/1188 : 60          |                      rts                           ; none of these keys : do nothing
-  858 |  1 asmdemo.s    582 | Comment     | 11 |         |    0 | 00/1189               | *<sym>
-  859 |  1 asmdemo.s    583 | Empty       | 11 |         |    0 | 00/1189               | doclear                                            
-  860 |  1 asmdemo.s    584 | Code        | 11 |         |    3 | 00/1189 : 20 05 12    |                      jsr      clerscr              ; call clear screen proc.
-  861 |  1 asmdemo.s    585 | Code        | 11 |         |    1 | 00/118C : 60          |                      rts                           
-  862 |  1 asmdemo.s    586 | Comment     | 11 |         |    0 | 00/118D               | *<sym>
-  863 |  1 asmdemo.s    587 | Code        | 11 |         |    2 | 00/118D : A9 01       | exitDK               lda      #1                   ; escape : set quit flag
-  864 |  1 asmdemo.s    588 | Code        | 11 |         |    3 | 00/118F : 8D 6A 0F    |                      sta      quitflag             
-  865 |  1 asmdemo.s    589 | Code        | 11 |         |    1 | 00/1192 : 60          |                      rts                           
-  866 |  1 asmdemo.s    590 | Empty       | 11 |         |    0 | 00/1193               |                                                    
-  867 |  1 asmdemo.s    591 | Comment     | 11 |         |    0 | 00/1193               | *<sym>
-  868 |  1 asmdemo.s    592 | Empty       | 11 |         |    0 | 00/1193               | doInverse                                          
-  869 |  1 asmdemo.s    593 | Code        | 11 |         |    3 | 00/1193 : AD CC 0F    |                      lda      inverse              
-  870 |  1 asmdemo.s    594 | Code        | 11 |         |    2 | 00/1196 : 49 01       |                      eor      #$01                 
-  871 |  1 asmdemo.s    595 | Code        | 11 |         |    3 | 00/1198 : 8D CC 0F    |                      sta      inverse              
-  872 |  1 asmdemo.s    596 | Code        | 11 |         |    3 | 00/119B : 4C 3A 0E    |                      jmp      startimage           
-  873 |  1 asmdemo.s    597 | Empty       | 11 |         |    0 | 00/119E               |                                                    
-  874 |  1 asmdemo.s    598 | Empty       | 11 |         |    0 | 00/119E               |                                                    
-  875 |  1 asmdemo.s    599 | Comment     | 11 |         |    0 | 00/119E               | *<sym>
-  876 |  1 asmdemo.s    600 | Empty       | 11 |         |    0 | 00/119E               | WaitForKeyPress                                    
-  877 |  1 asmdemo.s    601 | Code        | 11 |         |    3 | 00/119E : AD 00 C0    |                      lda      {$C000}              
-  878 |  1 asmdemo.s    602 | Code        | 11 |         |    2 | 00/11A1 : 10 FB       |                      bpl      WaitForKeyPress      
-  879 |  1 asmdemo.s    603 | Code        | 11 |         |    3 | 00/11A3 : 8D 10 C0    |                      sta      {$C010}              
-  880 |  1 asmdemo.s    604 | Code        | 11 |         |    1 | 00/11A6 : 60          |                      rts                           
-  881 |  1 asmdemo.s    605 | Empty       | 11 |         |    0 | 00/11A7               |                                                    
-  882 |  1 asmdemo.s    606 | Empty       | 11 |         |    0 | 00/11A7               |                                                    
-  883 |  1 asmdemo.s    607 | Empty       | 11 |         |    0 | 00/11A7               |                                                    
-  884 |  1 asmdemo.s    608 | Comment     | 11 |         |    0 | 00/11A7               | * ------------------ utils ------------------
-  885 |  1 asmdemo.s    609 | Empty       | 11 |         |    0 | 00/11A7               |                                                    
-  886 |  1 asmdemo.s    610 | Comment     | 11 |         |    0 | 00/11A7               | *<sym>
-  887 |  1 asmdemo.s    611 | Empty       | 11 |         |    0 | 00/11A7               | testLength                                         
-  888 |  1 asmdemo.s    612 | Code        | 11 |         |    3 | 00/11A7 : AD 22 14    |                      lda      filelength+2         ;       Byte 3 must 0 (else file size would be > $FFFF)
-  889 |  1 asmdemo.s    613 | Code        | 11 |         |    2 | 00/11AA : F0 02       |                      beq      ozunid_7             
-  890 |  1 asmdemo.s    614 | Code        | 11 |         |    1 | 00/11AC : 38          |                      sec                           
-  891 |  1 asmdemo.s    615 | Code        | 11 |         |    1 | 00/11AD : 60          |                      rts                           
-  892 |  1 asmdemo.s    616 | Empty       | 11 |         |    0 | 00/11AE               | ozunid_7                                           
-  893 |  1 asmdemo.s    617 | Code        | 11 |         |    3 | 00/11AE : AD 21 14    |                      lda      filelength+1         ; compare file length
-  894 |  1 asmdemo.s    618 | Code        | 11 |         |    2 | 00/11B1 : C9 20       |                      cmp      #>{$2000}            ; to maxlen
-  895 |  1 asmdemo.s    619 | Code        | 11 |         |    2 | 00/11B3 : D0 05       |                      bne      ozunid_8             
-  896 |  1 asmdemo.s    620 | Code        | 11 |         |    3 | 00/11B5 : AD 20 14    |                      lda      filelength           
-  897 |  1 asmdemo.s    621 | Code        | 11 |         |    2 | 00/11B8 : C9 00       |                      cmp      #<{$2000}            
-  898 |  1 asmdemo.s    622 | Empty       | 11 |         |    0 | 00/11BA               | ozunid_8                                           
-  899 |  1 asmdemo.s    623 | Code        | 11 |         |    2 | 00/11BA : 90 04       |                      bcc      lowerlen             ; lower : OK
-  900 |  1 asmdemo.s    624 | Code        | 11 |         |    2 | 00/11BC : D0 04       |                      bne      higherlen            ; higher : KO
-  901 |  1 asmdemo.s    625 | Code        | 11 |         |    2 | 00/11BE : F0 00       |                      beq      lowerlen             ; = : OK
-  902 |  1 asmdemo.s    626 | Comment     | 11 |         |    0 | 00/11C0               | *<sym>
-  903 |  1 asmdemo.s    627 | Code        | 11 |         |    1 | 00/11C0 : 18          | lowerlen             clc                           
-  904 |  1 asmdemo.s    628 | Code        | 11 |         |    1 | 00/11C1 : 60          |                      rts                           
-  905 |  1 asmdemo.s    629 | Comment     | 11 |         |    0 | 00/11C2               | *<sym>
-  906 |  1 asmdemo.s    630 | Empty       | 11 |         |    0 | 00/11C2               | higherlen                                          
-  907 |  1 asmdemo.s    631 | Code        | 11 |         |    1 | 00/11C2 : 38          |                      sec                           
-  908 |  1 asmdemo.s    632 | Code        | 11 |         |    1 | 00/11C3 : 60          |                      rts                           
-  909 |  1 asmdemo.s    633 | Comment     | 11 |         |    0 | 00/11C4               | *
-  910 |  1 asmdemo.s    634 | Comment     | 11 |         |    0 | 00/11C4               | * open BMP file
-  911 |  1 asmdemo.s    635 | Empty       | 11 |         |    0 | 00/11C4               |                                                    
-  912 |  1 asmdemo.s    636 | Comment     | 11 |         |    0 | 00/11C4               | *<sym>
-  913 |  1 asmdemo.s    637 | Empty       | 11 |         |    0 | 00/11C4               | openBMP                                            
-  914 |  1 asmdemo.s    638 | Code        | 11 |         |    3 | 00/11C4 : 20 00 BF    |                      jsr      {$BF00}              ; OPEN file
-  915 |  1 asmdemo.s    639 | Data        | 11 |         |    1 | 00/11C7 : C8          |                      dfb      {$C8}                
-  916 |  1 asmdemo.s    640 | Data        | 11 |         |    2 | 00/11C8 : F8 12       |                      da       OPEN_parms           
-  917 |  1 asmdemo.s    641 | Code        | 11 |         |    2 | 00/11CA : 90 01       |                      bcc      GetEOF               ; no error, go on
-  918 |  1 asmdemo.s    642 | Code        | 11 |         |    1 | 00/11CC : 60          |                      rts                           
-  919 |  1 asmdemo.s    643 | Comment     | 11 |         |    0 | 00/11CD               | *<sym>
-  920 |  1 asmdemo.s    644 | Empty       | 11 |         |    0 | 00/11CD               | GetEOF                                             
-  921 |  1 asmdemo.s    645 | Code        | 11 |         |    3 | 00/11CD : AD FD 12    |                      lda      ref                  ; get reference to file (got it in open mli call above)
-  922 |  1 asmdemo.s    646 | Code        | 11 |         |    3 | 00/11D0 : 8D F1 12    |                      sta      refread              ; set it for reading
-  923 |  1 asmdemo.s    647 | Code        | 11 |         |    3 | 00/11D3 : 8D 1F 14    |                      sta      refd1                ; set if for geteof
-  924 |  1 asmdemo.s    648 | Empty       | 11 |         |    0 | 00/11D6               |                                                    
-  925 |  1 asmdemo.s    649 | Code        | 11 |         |    3 | 00/11D6 : 20 00 BF    |                      jsr      {$BF00}              ; Call GetEOF to get length of file
-  926 |  1 asmdemo.s    650 | Data        | 11 |         |    1 | 00/11D9 : D1          |                      dfb      {$d1}                
-  927 |  1 asmdemo.s    651 | Data        | 11 |         |    2 | 00/11DA : 1E 14       |                      da       GET_EOF_param        
-  928 |  1 asmdemo.s    652 | Code        | 11 |         |    2 | 00/11DC : 90 01       |                      bcc      geteofOK             ; if call was ok then go on
-  929 |  1 asmdemo.s    653 | Code        | 11 |         |    1 | 00/11DE : 60          |                      rts                           
-  930 |  1 asmdemo.s    654 | Comment     | 11 |         |    0 | 00/11DF               | *<sym>
-  931 |  1 asmdemo.s    655 | Empty       | 11 |         |    0 | 00/11DF               | geteofOK                                           
-  932 |  1 asmdemo.s    656 | Code        | 11 |         |    3 | 00/11DF : 20 A7 11    |                      jsr      testLength           ; compare maxlen (max size for an image in memory ans size of BMP file
-  933 |  1 asmdemo.s    657 | Code        | 11 |         |    2 | 00/11E2 : 90 01       |                      bcc      LoadBMP              ; ok if file size < max size
-  934 |  1 asmdemo.s    658 | Code        | 11 |         |    1 | 00/11E4 : 60          |                      rts                           
-  935 |  1 asmdemo.s    659 | Empty       | 11 |         |    0 | 00/11E5               |                                                    
-  936 |  1 asmdemo.s    660 | Comment     | 11 |         |    0 | 00/11E5               | *<sym>
-  937 |  1 asmdemo.s    661 | Empty       | 11 |         |    0 | 00/11E5               | LoadBMP                                            ; read BMP file
-  938 |  1 asmdemo.s    662 | Code        | 11 |         |    3 | 00/11E5 : AD FD 12    |                      lda      ref                  ; set reference to file (got it in open mli call above)
-  939 |  1 asmdemo.s    663 | Code        | 11 |         |    3 | 00/11E8 : 8D F1 12    |                      sta      refread              
-  940 |  1 asmdemo.s    664 | Code        | 11 |         |    3 | 00/11EB : 20 00 BF    |                      jsr      {$BF00}              
-  941 |  1 asmdemo.s    665 | Data        | 11 |         |    1 | 00/11EE : CA          |                      dfb      {$CA}                
-  942 |  1 asmdemo.s    666 | Data        | 11 |         |    2 | 00/11EF : F0 12       |                      da       READ_param           
-  943 |  1 asmdemo.s    667 | Code        | 11 |         |    1 | 00/11F1 : 60          |                      rts                           
-  944 |  1 asmdemo.s    668 | Empty       | 11 |         |    0 | 00/11F2               |                                                    
-  945 |  1 asmdemo.s    669 | Comment     | 11 |         |    0 | 00/11F2               | * Set DHGR mode
-  946 |  1 asmdemo.s    670 | Comment     | 11 |         |    0 | 00/11F2               | *<sym>
-  947 |  1 asmdemo.s    671 | Empty       | 11 |         |    0 | 00/11F2               | dodhgr                                             
-  948 |  1 asmdemo.s    672 | Code        | 11 |         |    3 | 00/11F2 : 8D 50 C0    |                      sta      {$C050}              
-  949 |  1 asmdemo.s    673 | Code        | 11 |         |    3 | 00/11F5 : 8D 57 C0    |                      sta      {$C057}              
-  950 |  1 asmdemo.s    674 | Code        | 11 |         |    3 | 00/11F8 : 8D 52 C0    |                      sta      {$C052}              
-  951 |  1 asmdemo.s    675 | Code        | 11 |         |    3 | 00/11FB : 8D 5E C0    |                      sta      {$C05E}              
-  952 |  1 asmdemo.s    676 | Code        | 11 |         |    3 | 00/11FE : 8D 0D C0    |                      sta      {$C00D}              
-  953 |  1 asmdemo.s    677 | Code        | 11 |         |    3 | 00/1201 : 8D 01 C0    |                      sta      {$C001}              
-  954 |  1 asmdemo.s    678 | Code        | 11 |         |    1 | 00/1204 : 60          |                      rts                           
-  955 |  1 asmdemo.s    679 | Empty       | 11 |         |    0 | 00/1205               |                                                    
-  956 |  1 asmdemo.s    680 | Comment     | 11 |         |    0 | 00/1205               | * Clear DHGR screen   
-  957 |  1 asmdemo.s    681 | Equivalence | 11 |         |    0 | 00/1205               | screenbase           equ      $2000                ; address of screen memory
-  958 |  1 asmdemo.s    682 | Comment     | 11 |         |    0 | 00/1205               | *<sym> 
-  959 |  1 asmdemo.s    683 | Empty       | 11 |         |    0 | 00/1205               | clerscr                                            
-  960 |  1 asmdemo.s    684 | Code        | 11 |         |    2 | 00/1205 : A9 00       |                      lda      #<{$2000}            
-  961 |  1 asmdemo.s    685 | Code        | 11 |         |    2 | 00/1207 : 85 06       |                      sta      {$06}                
-  962 |  1 asmdemo.s    686 | Code        | 11 |         |    2 | 00/1209 : A9 20       |                      lda      #>{$2000}+1          
-  963 |  1 asmdemo.s    687 | Code        | 11 |         |    2 | 00/120B : 85 07       |                      sta      {$06}+1              
-  964 |  1 asmdemo.s    688 | Code        | 11 |         |    2 | 00/120D : A0 00       |                      ldy      #0                   
-  965 |  1 asmdemo.s    689 | Code        | 11 |         |    2 | 00/120F : A9 00       |                      lda      #0                   
-  966 |  1 asmdemo.s    690 | Code        | 11 |         |    3 | 00/1211 : 8D 00 C0    |                      sta      $C000                
-  967 |  1 asmdemo.s    691 | Comment     | 11 |         |    0 | 00/1214               | *<sym> 
-  968 |  1 asmdemo.s    692 | Empty       | 11 |         |    0 | 00/1214               | clrloop                                            
-  969 |  1 asmdemo.s    693 | Code        | 11 |         |    2 | 00/1214 : 91 06       |                      sta      ({$06}),y            
-  970 |  1 asmdemo.s    694 | Code        | 11 |         |    3 | 00/1216 : 8D 05 C0    |                      sta      {$C005}              ; write char in aux
-  971 |  1 asmdemo.s    695 | Code        | 11 |         |    2 | 00/1219 : 91 06       |                      sta      ({$06}),y            
-  972 |  1 asmdemo.s    696 | Code        | 11 |         |    3 | 00/121B : 8D 04 C0    |                      sta      {$C004}              
-  973 |  1 asmdemo.s    697 | Code        | 11 |         |    1 | 00/121E : C8          |                      iny                           
-  974 |  1 asmdemo.s    698 | Code        | 11 |         |    2 | 00/121F : D0 F3       |                      bne      clrloop              
-  975 |  1 asmdemo.s    699 | Code        | 11 |         |    2 | 00/1221 : E6 07       |                      inc      {$06}+1              
-  976 |  1 asmdemo.s    700 | Code        | 11 |         |    2 | 00/1223 : A6 07       |                      ldx      {$06}+1              
-  977 |  1 asmdemo.s    701 | Code        | 11 |         |    2 | 00/1225 : E0 40       |                      cpx      #$40                 
-  978 |  1 asmdemo.s    702 | Code        | 11 |         |    2 | 00/1227 : D0 EB       |                      bne      clrloop              
-  979 |  1 asmdemo.s    703 | Code        | 11 |         |    3 | 00/1229 : 8D 01 C0    |                      sta      $C001                
-  980 |  1 asmdemo.s    704 | Code        | 11 |         |    3 | 00/122C : 20 9E 11    |                      jsr      WaitForKeyPress      
-  981 |  1 asmdemo.s    705 | Code        | 11 |         |    3 | 00/122F : 4C 3A 0E    |                      jmp      startimage           
-  982 |  1 asmdemo.s    706 | Code        | 11 |         |    1 | 00/1232 : 60          |                      rts                           
-  983 |  1 asmdemo.s    707 | Empty       | 11 |         |    0 | 00/1233               |                                                    
-  984 |  1 asmdemo.s    708 | Comment     | 11 |         |    0 | 00/1233               | *<sym>
-  985 |  1 asmdemo.s    709 | Empty       | 11 |         |    0 | 00/1233               | DoTextScreen                                       
-  986 |  1 asmdemo.s    710 | Code        | 11 |         |    3 | 00/1233 : 8D 00 C0    |                      sta      $c000                ;80store off
-  987 |  1 asmdemo.s    711 | Code        | 11 |         |    3 | 00/1236 : 8D 02 C0    |                      sta      $c002                ;RAMRD main
-  988 |  1 asmdemo.s    712 | Code        | 11 |         |    3 | 00/1239 : 8D 04 C0    |                      sta      $c004                ;RAMWRT main
-  989 |  1 asmdemo.s    713 | Code        | 11 |         |    3 | 00/123C : 8D 0C C0    |                      sta      $c00c                ;80col off
-  990 |  1 asmdemo.s    714 | Code        | 11 |         |    3 | 00/123F : 8D 0E C0    |                      sta      $c00e                ;Altcharset off
-  991 |  1 asmdemo.s    715 | Code        | 11 |         |    3 | 00/1242 : 8D 81 C0    |                      sta      $c081                ;write RAM, read ROM (2nd 4k bank)
-  992 |  1 asmdemo.s    716 | Code        | 11 |         |    3 | 00/1245 : 20 2F FB    |                      jsr      {$FB2F}              
-  993 |  1 asmdemo.s    717 | Code        | 11 |         |    3 | 00/1248 : 20 58 FC    |                      jsr      {$FC58}              
-  994 |  1 asmdemo.s    718 | Code        | 11 |         |    3 | 00/124B : 20 84 FE    |                      jsr      {$FE84}              
-  995 |  1 asmdemo.s    719 | Code        | 11 |         |    3 | 00/124E : 20 93 FE    |                      jsr      {$fe93}              
-  996 |  1 asmdemo.s    720 | Code        | 11 |         |    3 | 00/1251 : 20 89 FE    |                      jsr      {$fe89}              
-  997 |  1 asmdemo.s    721 | Code        | 11 |         |    1 | 00/1254 : 60          |                      rts                           
-  998 |  1 asmdemo.s    722 | Comment     | 11 |         |    0 | 00/1255               | *
-  999 |  1 asmdemo.s    723 | Comment     | 11 |         |    0 | 00/1255               | *<sym>
- 1000 |  1 asmdemo.s    724 | Empty       | 11 |         |    0 | 00/1255               | clearbuffer                                        
- 1001 |  1 asmdemo.s    725 | Comment     | 11 |         |    0 | 00/1255               | * clear memory 
- 1002 |  1 asmdemo.s    726 | Code        | 11 |         |    2 | 00/1255 : A9 7B       |                      lda      #<outbuff            
- 1003 |  1 asmdemo.s    727 | Code        | 11 |         |    2 | 00/1257 : 85 06       |                      sta      {$06}                
- 1004 |  1 asmdemo.s    728 | Code        | 11 |         |    2 | 00/1259 : A9 0F       |                      lda      #>outbuff            
- 1005 |  1 asmdemo.s    729 | Code        | 11 |         |    2 | 00/125B : 85 07       |                      sta      {$06}+1              
- 1006 |  1 asmdemo.s    730 | Code        | 11 |         |    2 | 00/125D : A9 00       |                      lda      #0                   
- 1007 |  1 asmdemo.s    731 | Code        | 11 |         |    2 | 00/125F : A0 00       |                      ldy      #0                   
- 1008 |  1 asmdemo.s    732 | Comment     | 11 |         |    0 | 00/1261               | *<sym>
- 1009 |  1 asmdemo.s    733 | Code        | 11 |         |    2 | 00/1261 : 91 06       | pokeZ                sta      ({$06}),y            
- 1010 |  1 asmdemo.s    734 | Code        | 11 |         |    1 | 00/1263 : C8          |                      iny                           
- 1011 |  1 asmdemo.s    735 | Code        | 11 |         |    2 | 00/1264 : C0 50       |                      cpy      #80                  
- 1012 |  1 asmdemo.s    736 | Code        | 11 |         |    2 | 00/1266 : D0 F9       |                      bne      pokeZ                
- 1013 |  1 asmdemo.s    737 | Code        | 11 |         |    1 | 00/1268 : 60          |                      rts                           
- 1014 |  1 asmdemo.s    738 | Comment     | 11 |         |    0 | 00/1269               | *               
- 1015 |  1 asmdemo.s    739 | Comment     | 11 |         |    0 | 00/1269               | *<sym>
- 1016 |  1 asmdemo.s    740 | Empty       | 11 |         |    0 | 00/1269               | ProDOSQuit                                         
- 1017 |  1 asmdemo.s    741 | Code        | 11 |         |    3 | 00/1269 : 20 00 BF    |                      jsr      $BF00                ; ProDOS Quit
- 1018 |  1 asmdemo.s    742 | Data        | 11 |         |    1 | 00/126C : 65          |                      dfb      $65                  
- 1019 |  1 asmdemo.s    743 | Data        | 11 |         |    2 | 00/126D : 70 12       |                      dw       QuitParams           
- 1020 |  1 asmdemo.s    744 | Code        | 11 |         |    1 | 00/126F : 60          |                      rts                           
- 1021 |  1 asmdemo.s    745 | Comment     | 11 |         |    0 | 00/1270               | *<sym>
- 1022 |  1 asmdemo.s    746 | Data        | 11 |         |    1 | 00/1270 : 04          | QuitParams           dfb      4                    
- 1023 |  1 asmdemo.s    747 | Data        | 11 |         |    8 | 00/1271 : 00 00 00 00 |                      dw       0,0,0,0              ; standard parameters for Quit call
-      |                     |             |    |         |      |           00 00 00 00 |
- 1024 |  1 asmdemo.s    748 | Comment     | 11 |         |    0 | 00/1279               | *
- 1025 |  1 asmdemo.s    749 | Comment     | 11 |         |    0 | 00/1279               | *<sym>
- 1026 |  1 asmdemo.s    750 | Empty       | 11 |         |    0 | 00/1279               | computeBytes                                       
- 1027 |  1 asmdemo.s    751 | Comment     | 11 |         |    0 | 00/1279               | * given the # of bits in A,X (lo,hi), computes the # of bytes
- 1028 |  1 asmdemo.s    752 | Comment     | 11 |         |    0 | 00/1279               | * to hold these bits on Apple II screen (7 pixels per byte)           
- 1029 |  1 asmdemo.s    753 | Code        | 11 |         |    3 | 00/1279 : 8D A1 12    |                      sta      mybyte               ; number of bits (16 bits integer)
- 1030 |  1 asmdemo.s    754 | Code        | 11 |         |    3 | 00/127C : 8E A2 12    |                      stx      mybyte+1             
- 1031 |  1 asmdemo.s    755 | Code        | 11 |         |    2 | 00/127F : A2 01       |                      ldx      #1                   ; x = number of needed bytes
- 1032 |  1 asmdemo.s    756 | Comment     | 11 |         |    0 | 00/1281               | *<sym>
- 1033 |  1 asmdemo.s    757 | Empty       | 11 |         |    0 | 00/1281               | loopbyte                                           
- 1034 |  1 asmdemo.s    758 | Code        | 11 |         |    3 | 00/1281 : AD A1 12    |                      lda      mybyte               
- 1035 |  1 asmdemo.s    759 | Code        | 11 |         |    1 | 00/1284 : 38          |                      sec                           
- 1036 |  1 asmdemo.s    760 | Code        | 11 |         |    2 | 00/1285 : E9 07       |                      sbc      #7                   
- 1037 |  1 asmdemo.s    761 | Code        | 11 |         |    3 | 00/1287 : 8D A1 12    |                      sta      mybyte               
- 1038 |  1 asmdemo.s    762 | Code        | 11 |         |    3 | 00/128A : AD A2 12    |                      lda      mybyte+1             
- 1039 |  1 asmdemo.s    763 | Code        | 11 |         |    2 | 00/128D : E9 00       |                      sbc      #0                   
- 1040 |  1 asmdemo.s    764 | Code        | 11 |         |    3 | 00/128F : 8D A2 12    |                      sta      mybyte+1             
- 1041 |  1 asmdemo.s    765 | Empty       | 11 |         |    0 | 00/1292               |                                                    
- 1042 |  1 asmdemo.s    766 | Code        | 11 |         |    3 | 00/1292 : 0D A1 12    |                      ora      mybyte               
- 1043 |  1 asmdemo.s    767 | Code        | 11 |         |    2 | 00/1295 : F0 09       |                      beq      ozunid_9             ; = 0 : exit, nb_byte is correct
- 1044 |  1 asmdemo.s    768 | Code        | 11 |         |    3 | 00/1297 : AD A2 12    |                      lda      mybyte+1             
- 1045 |  1 asmdemo.s    769 | Code        | 11 |         |    2 | 00/129A : 30 04       |                      bmi      ozunid_9             ; < 0 : exit, nb_byte is correct
- 1046 |  1 asmdemo.s    770 | Comment     | 11 |         |    0 | 00/129C               |                                         ; > 0 : loop
- 1047 |  1 asmdemo.s    771 | Code        | 11 |         |    1 | 00/129C : E8          |                      inx                           
- 1048 |  1 asmdemo.s    772 | Code        | 11 |         |    3 | 00/129D : 4C 81 12    |                      jmp      loopbyte             
- 1049 |  1 asmdemo.s    773 | Empty       | 11 |         |    0 | 00/12A0               | ozunid_9                                           
- 1050 |  1 asmdemo.s    774 | Code        | 11 |         |    1 | 00/12A0 : 60          |                      rts                           
- 1051 |  1 asmdemo.s    775 | Comment     | 11 |         |    0 | 00/12A1               | *<sym>
- 1052 |  1 asmdemo.s    776 | Empty       | 11 |         |    0 | 00/12A1               | mybyte                                             
- 1053 |  1 asmdemo.s    777 | Data        | 11 |         |    2 | 00/12A1 : 00 00       |                      ds       2                    
- 1054 |  1 asmdemo.s    778 | Comment     | 11 |         |    0 | 00/12A3               | *
- 1055 |  1 asmdemo.s    779 | Comment     | 11 |         |    0 | 00/12A3               | *
- 1056 |  1 asmdemo.s    780 | Comment     | 11 |         |    0 | 00/12A3               | *********** PREFIX *************
- 1057 |  1 asmdemo.s    781 | Comment     | 11 |         |    0 | 00/12A3               | * Set prefix using current préfix :
- 1058 |  1 asmdemo.s    782 | Comment     | 11 |         |    0 | 00/12A3               | * Call GETPREFIX, put it in "path" string
- 1059 |  1 asmdemo.s    783 | Comment     | 11 |         |    0 | 00/12A3               | * If no prefix (i.e. length of "path" string = 0),
- 1060 |  1 asmdemo.s    784 | Comment     | 11 |         |    0 | 00/12A3               | * then get préfix from last used disk, unsing ONLINE call
- 1061 |  1 asmdemo.s    785 | Comment     | 11 |         |    0 | 00/12A3               | * If any error, exit with carry set
- 1062 |  1 asmdemo.s    786 | Comment     | 11 |         |    0 | 00/12A3               | * else exit with carry clear
- 1063 |  1 asmdemo.s    787 | Comment     | 11 |         |    0 | 00/12A3               | *
- 1064 |  1 asmdemo.s    788 | Comment     | 11 |         |    0 | 00/12A3               | *<sym>
- 1065 |  1 asmdemo.s    789 | Empty       | 11 |         |    0 | 00/12A3               | doprefix                                           
- 1066 |  1 asmdemo.s    790 | Code        | 11 |         |    3 | 00/12A3 : 20 00 BF    |                      jsr      {$BF00}              ; getprefix MLI call ; put prefix in "path"
- 1067 |  1 asmdemo.s    791 | Data        | 11 |         |    1 | 00/12A6 : C7          |                      dfb      {$c7}                
- 1068 |  1 asmdemo.s    792 | Data        | 11 |         |    2 | 00/12A7 : 02 13       |                      da       GET_PREFIX_param     
- 1069 |  1 asmdemo.s    793 | Code        | 11 |         |    2 | 00/12A9 : 90 01       |                      bcc      gpOk                 
- 1070 |  1 asmdemo.s    794 | Code        | 11 |         |    1 | 00/12AB : 60          |                      rts                           
- 1071 |  1 asmdemo.s    795 | Comment     | 11 |         |    0 | 00/12AC               | *<sym>
- 1072 |  1 asmdemo.s    796 | Empty       | 11 |         |    0 | 00/12AC               | gpOk                                               
- 1073 |  1 asmdemo.s    797 | Code        | 11 |         |    3 | 00/12AC : AD 0C 13    |                      lda      path                 ; first char = length
- 1074 |  1 asmdemo.s    798 | Code        | 11 |         |    2 | 00/12AF : F0 03       |                      beq      noprefix             ; if length = 0 => no prefix
- 1075 |  1 asmdemo.s    799 | Code        | 11 |         |    3 | 00/12B1 : 4C EF 12    |                      jmp      prefixSetOK          ; else prefix already set, exit
- 1076 |  1 asmdemo.s    800 | Comment     | 11 |         |    0 | 00/12B4               | *<sym>
- 1077 |  1 asmdemo.s    801 | Empty       | 11 |         |    0 | 00/12B4               | noprefix                                           
- 1078 |  1 asmdemo.s    802 | Code        | 11 |         |    3 | 00/12B4 : AD 30 BF    |                      lda      {$BF30}              ; last used slot/drive
- 1079 |  1 asmdemo.s    803 | Code        | 11 |         |    3 | 00/12B7 : 8D 09 13    |                      sta      unit                 ; param du mli online
- 1080 |  1 asmdemo.s    804 | Code        | 11 |         |    3 | 00/12BA : 20 00 BF    |                      jsr      {$BF00}              
- 1081 |  1 asmdemo.s    805 | Data        | 11 |         |    1 | 00/12BD : C5          |                      dfb      {$C5}                ; on_line : get prefix in path
- 1082 |  1 asmdemo.s    806 | Data        | 11 |         |    2 | 00/12BE : 08 13       |                      da       ONLINE_param         
- 1083 |  1 asmdemo.s    807 | Code        | 11 |         |    2 | 00/12C0 : 90 01       |                      bcc      onlineOK             
- 1084 |  1 asmdemo.s    808 | Code        | 11 |         |    1 | 00/12C2 : 60          |                      rts                           
- 1085 |  1 asmdemo.s    809 | Comment     | 11 |         |    0 | 00/12C3               | *<sym>
- 1086 |  1 asmdemo.s    810 | Empty       | 11 |         |    0 | 00/12C3               | onlineOK                                           
- 1087 |  1 asmdemo.s    811 | Code        | 11 |         |    3 | 00/12C3 : AD 0C 13    |                      lda      path                 
- 1088 |  1 asmdemo.s    812 | Code        | 11 |         |    2 | 00/12C6 : 29 0F       |                      and      #$0f                 ; length in low nibble
- 1089 |  1 asmdemo.s    813 | Code        | 11 |         |    3 | 00/12C8 : 8D 0C 13    |                      sta      path                 
- 1090 |  1 asmdemo.s    814 | Code        | 11 |         |    1 | 00/12CB : AA          |                      tax                           
- 1091 |  1 asmdemo.s    815 | Comment     | 11 |         |    0 | 00/12CC               | *<sym>
- 1092 |  1 asmdemo.s    816 | Code        | 11 |         |    3 | 00/12CC : BD 0C 13    | ozunid_10            lda      path,x               ; shift prefix by one byte
- 1093 |  1 asmdemo.s    817 | Code        | 11 |         |    3 | 00/12CF : 9D 0D 13    |                      sta      path+1,x             ;
- 1094 |  1 asmdemo.s    818 | Code        | 11 |         |    1 | 00/12D2 : CA          |                      dex                           
- 1095 |  1 asmdemo.s    819 | Code        | 11 |         |    2 | 00/12D3 : D0 F7       |                      bne      ozunid_10            ; all string
- 1096 |  1 asmdemo.s    820 | Code        | 11 |         |    3 | 00/12D5 : EE 0C 13    |                      inc      path                 
- 1097 |  1 asmdemo.s    821 | Code        | 11 |         |    3 | 00/12D8 : EE 0C 13    |                      inc      path                 ; length = length + 2
- 1098 |  1 asmdemo.s    822 | Code        | 11 |         |    3 | 00/12DB : AE 0C 13    |                      ldx      path                 ;
- 1099 |  1 asmdemo.s    823 | Code        | 11 |         |    2 | 00/12DE : A9 AF       |                      lda      #$af                 ; = '/'
- 1100 |  1 asmdemo.s    824 | Code        | 11 |         |    3 | 00/12E0 : 9D 0C 13    |                      sta      path,x               ; insert '/'' at the end
- 1101 |  1 asmdemo.s    825 | Code        | 11 |         |    3 | 00/12E3 : 8D 0D 13    |                      sta      path+1               ; and '/'' at the beginning
- 1102 |  1 asmdemo.s    826 | Empty       | 11 |         |    0 | 00/12E6               |                                                    
- 1103 |  1 asmdemo.s    827 | Code        | 11 |         |    3 | 00/12E6 : 20 00 BF    |                      jsr      {$BF00}              ; set_prefix (in the form : /prefix/)
- 1104 |  1 asmdemo.s    828 | Data        | 11 |         |    1 | 00/12E9 : C6          |                      dfb      {$c6}                
- 1105 |  1 asmdemo.s    829 | Data        | 11 |         |    2 | 00/12EA : 05 13       |                      da       SET_PREFIX_param     
- 1106 |  1 asmdemo.s    830 | Code        | 11 |         |    2 | 00/12EC : 90 01       |                      bcc      prefixSetOK          
- 1107 |  1 asmdemo.s    831 | Code        | 11 |         |    1 | 00/12EE : 60          |                      rts                           
- 1108 |  1 asmdemo.s    832 | Comment     | 11 |         |    0 | 00/12EF               | *<sym>
- 1109 |  1 asmdemo.s    833 | Empty       | 11 |         |    0 | 00/12EF               | prefixSetOK                                        
- 1110 |  1 asmdemo.s    834 | Code        | 11 |         |    1 | 00/12EF : 60          |                      rts                           
- 1111 |  1 asmdemo.s    835 | Comment     | 11 |         |    0 | 00/12F0               | *
- 1112 |  1 asmdemo.s    836 | Comment     | 11 |         |    0 | 00/12F0               | *
- 1113 |  1 asmdemo.s    837 | Comment     | 11 |         |    0 | 00/12F0               | * * * * MLI Call READ parameters * * * * 
- 1114 |  1 asmdemo.s    838 | Comment     | 11 |         |    0 | 00/12F0               | *<sym>
- 1115 |  1 asmdemo.s    839 | Empty       | 11 |         |    0 | 00/12F0               | READ_param                                         ; READ file
- 1116 |  1 asmdemo.s    840 | Data        | 11 |         |    1 | 00/12F0 : 04          |                      hex      04                   ; number of params.
- 1117 |  1 asmdemo.s    841 | Comment     | 11 |         |    0 | 00/12F1               | *<sym>
- 1118 |  1 asmdemo.s    842 | Data        | 11 |         |    1 | 00/12F1 : 00          | refread              hex      00                   ; ref #
- 1119 |  1 asmdemo.s    843 | Comment     | 11 |         |    0 | 00/12F2               | *<sym>
- 1120 |  1 asmdemo.s    844 | Data        | 11 |         |    2 | 00/12F2 : 00 60       | rdbuffa              da       {$6000}              
- 1121 |  1 asmdemo.s    845 | Comment     | 11 |         |    0 | 00/12F4               | *<sym>
- 1122 |  1 asmdemo.s    846 | Data        | 11 |         |    2 | 00/12F4 : 00 20       | rreq                 hex      0020                 ; bytes requested
- 1123 |  1 asmdemo.s    847 | Comment     | 11 |         |    0 | 00/12F6               | *<sym>
- 1124 |  1 asmdemo.s    848 | Data        | 11 |         |    2 | 00/12F6 : 00 00       | readlen              hex      0000                 ; bytes read
- 1125 |  1 asmdemo.s    849 | Comment     | 11 |         |    0 | 00/12F8               | *
- 1126 |  1 asmdemo.s    850 | Comment     | 11 |         |    0 | 00/12F8               | * * * * MLI Call OPEN parameters * * * * 
- 1127 |  1 asmdemo.s    851 | Comment     | 11 |         |    0 | 00/12F8               | *<sym>
- 1128 |  1 asmdemo.s    852 | Empty       | 11 |         |    0 | 00/12F8               | OPEN_parms                                         ; OPEN file for reading
- 1129 |  1 asmdemo.s    853 | Data        | 11 |         |    1 | 00/12F8 : 03          |                      hex      03                   ; number of params.
- 1130 |  1 asmdemo.s    854 | Data        | 11 |         |    2 | 00/12F9 : FE 12       |                      da       fname                ; path name
- 1131 |  1 asmdemo.s    855 | Comment     | 11 |         |    0 | 00/12FB               | *<sym>
- 1132 |  1 asmdemo.s    856 | Data        | 11 |         |    2 | 00/12FB : 00 00       | fbuff                hex      0000                 
- 1133 |  1 asmdemo.s    857 | Comment     | 11 |         |    0 | 00/12FD               | *<sym>
- 1134 |  1 asmdemo.s    858 | Data        | 11 |         |    1 | 00/12FD : 00          | ref                  hex      00                   
- 1135 |  1 asmdemo.s    859 | Comment     | 11 |         |    0 | 00/12FE               | *<sym>
- 1136 |  1 asmdemo.s    860 | Data        | 11 |         |    4 | 00/12FE : 03 49 4D 47 | fname                str      'IMG'                
- 1137 |  1 asmdemo.s    861 | Comment     | 11 |         |    0 | 00/1302               | *
- 1138 |  1 asmdemo.s    862 | Comment     | 11 |         |    0 | 00/1302               | * * * * MLI Call GET_PREFIX parameters * * * * 
- 1139 |  1 asmdemo.s    863 | Comment     | 11 |         |    0 | 00/1302               | *<sym>
- 1140 |  1 asmdemo.s    864 | Empty       | 11 |         |    0 | 00/1302               | GET_PREFIX_param                                   ; GET_PREFIX
- 1141 |  1 asmdemo.s    865 | Data        | 11 |         |    1 | 00/1302 : 01          |                      hex      01                   ; number of params.
- 1142 |  1 asmdemo.s    866 | Data        | 11 |         |    2 | 00/1303 : 0C 13       |                      da       path                 
- 1143 |  1 asmdemo.s    867 | Empty       | 11 |         |    0 | 00/1305               |                                                    
- 1144 |  1 asmdemo.s    868 | Comment     | 11 |         |    0 | 00/1305               | *
- 1145 |  1 asmdemo.s    869 | Comment     | 11 |         |    0 | 00/1305               | * * * * MLI Call SET_PREFIX parameters * * * *
- 1146 |  1 asmdemo.s    870 | Comment     | 11 |         |    0 | 00/1305               | *<sym>
- 1147 |  1 asmdemo.s    871 | Empty       | 11 |         |    0 | 00/1305               | SET_PREFIX_param                                   ; SET_PREFIX
- 1148 |  1 asmdemo.s    872 | Data        | 11 |         |    1 | 00/1305 : 01          |                      hex      01                   ; number of params.
- 1149 |  1 asmdemo.s    873 | Data        | 11 |         |    2 | 00/1306 : 0C 13       |                      da       path                 
- 1150 |  1 asmdemo.s    874 | Comment     | 11 |         |    0 | 00/1308               | *
- 1151 |  1 asmdemo.s    875 | Comment     | 11 |         |    0 | 00/1308               | *
- 1152 |  1 asmdemo.s    876 | Comment     | 11 |         |    0 | 00/1308               | * * * * MLI Call ONLINE parameters * * * *
- 1153 |  1 asmdemo.s    877 | Comment     | 11 |         |    0 | 00/1308               | *<sym>
- 1154 |  1 asmdemo.s    878 | Empty       | 11 |         |    0 | 00/1308               | ONLINE_param                                       ; ONLINE
- 1155 |  1 asmdemo.s    879 | Data        | 11 |         |    1 | 00/1308 : 02          |                      hex      02                   ; number of params.
- 1156 |  1 asmdemo.s    880 | Comment     | 11 |         |    0 | 00/1309               | *<sym>
- 1157 |  1 asmdemo.s    881 | Data        | 11 |         |    1 | 00/1309 : 00          | unit                 hex      00                   
- 1158 |  1 asmdemo.s    882 | Data        | 11 |         |    2 | 00/130A : 0C 13       |                      da       path                 
- 1159 |  1 asmdemo.s    883 | Comment     | 11 |         |    0 | 00/130C               | *
- 1160 |  1 asmdemo.s    884 | Comment     | 11 |         |    0 | 00/130C               | *<sym>
- 1161 |  1 asmdemo.s    885 | Data        | 11 |         |  256 | 00/130C : 00 00 00 00 | path                 ds       256                  ; storage for path
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
-      |                     |             |    |         |      |           00 00 00 00 |
- 1162 |  1 asmdemo.s    886 | Comment     | 11 |         |    0 | 00/140C               | *
- 1163 |  1 asmdemo.s    887 | Comment     | 11 |         |    0 | 00/140C               | * * * * MLI Call GET_FILE_INFO parameters * * * *
- 1164 |  1 asmdemo.s    888 | Comment     | 11 |         |    0 | 00/140C               | *<sym>
- 1165 |  1 asmdemo.s    889 | Empty       | 11 |         |    0 | 00/140C               | GET_FILE_INFO_param                                ; GET_FILE_INFO
- 1166 |  1 asmdemo.s    890 | Data        | 11 |         |    1 | 00/140C : 0A          |                      hex      0A                   
- 1167 |  1 asmdemo.s    891 | Data        | 11 |         |    2 | 00/140D : 0C 13       |                      da       path                 
- 1168 |  1 asmdemo.s    892 | Comment     | 11 |         |    0 | 00/140F               | *<sym>
- 1169 |  1 asmdemo.s    893 | Data        | 11 |         |    1 | 00/140F : 00          | access               hex      00                   
- 1170 |  1 asmdemo.s    894 | Comment     | 11 |         |    0 | 00/1410               | *<sym>
- 1171 |  1 asmdemo.s    895 | Data        | 11 |         |    1 | 00/1410 : 00          | ftype                hex      00                   
- 1172 |  1 asmdemo.s    896 | Comment     | 11 |         |    0 | 00/1411               | *<sym>
- 1173 |  1 asmdemo.s    897 | Data        | 11 |         |    2 | 00/1411 : 00 00       | auxtype              hex      0000                 
- 1174 |  1 asmdemo.s    898 | Comment     | 11 |         |    0 | 00/1413               | *<sym>
- 1175 |  1 asmdemo.s    899 | Data        | 11 |         |    1 | 00/1413 : 00          | stotype              hex      00                   
- 1176 |  1 asmdemo.s    900 | Comment     | 11 |         |    0 | 00/1414               | *<sym>
- 1177 |  1 asmdemo.s    901 | Data        | 11 |         |    2 | 00/1414 : 00 00       | blocks               hex      0000                 
- 1178 |  1 asmdemo.s    902 | Comment     | 11 |         |    0 | 00/1416               | *<sym>
- 1179 |  1 asmdemo.s    903 | Data        | 11 |         |    2 | 00/1416 : 00 00       | date                 hex      0000                 
- 1180 |  1 asmdemo.s    904 | Comment     | 11 |         |    0 | 00/1418               | *<sym>
- 1181 |  1 asmdemo.s    905 | Data        | 11 |         |    2 | 00/1418 : 00 00       | time                 hex      0000                 
- 1182 |  1 asmdemo.s    906 | Data        | 11 |         |    2 | 00/141A : 00 00       | cdate                hex      0000                 
- 1183 |  1 asmdemo.s    907 | Data        | 11 |         |    2 | 00/141C : 00 00       | ctime                hex      0000                 
- 1184 |  1 asmdemo.s    908 | Comment     | 11 |         |    0 | 00/141E               | *
- 1185 |  1 asmdemo.s    909 | Comment     | 11 |         |    0 | 00/141E               | * * * * MLI Call GET_EOF parameters * * * *
- 1186 |  1 asmdemo.s    910 | Comment     | 11 |         |    0 | 00/141E               | *<sym>
- 1187 |  1 asmdemo.s    911 | Empty       | 11 |         |    0 | 00/141E               | GET_EOF_param                                      ; GET_EOF
- 1188 |  1 asmdemo.s    912 | Data        | 11 |         |    1 | 00/141E : 02          |                      hex      02                   
- 1189 |  1 asmdemo.s    913 | Comment     | 11 |         |    0 | 00/141F               | *<sym>
- 1190 |  1 asmdemo.s    914 | Data        | 11 |         |    1 | 00/141F : 00          | refd1                hex      00                   
- 1191 |  1 asmdemo.s    915 | Comment     | 11 |         |    0 | 00/1420               | *<sym>
- 1192 |  1 asmdemo.s    916 | Data        | 11 |         |    3 | 00/1420 : 00 00 00    | filelength           ds       3                    
- 1193 |  1 asmdemo.s    917 | Empty       | 11 |         |    0 | 00/1423               |                                                    
- 1194 |  1 asmdemo.s    918 | Directive   | 11 |         |    0 | 00/1423               |                      put      hilo                 
- 1195 |  4    hilo.s      1 | Comment     | 11 |         |    0 | 00/1423               | *
- 1196 |  4    hilo.s      2 | Comment     | 11 |         |    0 | 00/1423               | *
- 1197 |  4    hilo.s      3 | Data        | 11 |         |    8 | 00/1423 : 20 24 28 2C | hi                   hex      2024282c3034383c     
+  856 |  1 asmdemo.s    580 | Code        | 11 |         |    2 | 00/1186 : F0 04       |                      beq      doclear              ; clear screen and wait a keydown
+  857 |  1 asmdemo.s    581 | Empty       | 11 |         |    0 | 00/1188               |                                                    
+  858 |  1 asmdemo.s    582 | Code        | 11 |         |    3 | 00/1188 : 20 1C 12    |                      jsr      clearscrn            ; non of these keys : clear and redraw immediately
+  859 |  1 asmdemo.s    583 | Code        | 11 |         |    1 | 00/118B : 60          |                      rts                           
+  860 |  1 asmdemo.s    584 | Comment     | 11 |         |    0 | 00/118C               | *<sym>
+  861 |  1 asmdemo.s    585 | Empty       | 11 |         |    0 | 00/118C               | doclear                                            
+  862 |  1 asmdemo.s    586 | Code        | 11 |         |    3 | 00/118C : 20 1C 12    |                      jsr      clearscrn            ; call clear screen proc.
+  863 |  1 asmdemo.s    587 | Code        | 11 |         |    3 | 00/118F : 20 A6 11    |                      jsr      WaitForKeyPress      
+  864 |  1 asmdemo.s    588 | Code        | 11 |         |    3 | 00/1192 : 4C 3A 0E    |                      jmp      startimage           
+  865 |  1 asmdemo.s    589 | Empty       | 11 |         |    0 | 00/1195               |                                                    
+  866 |  1 asmdemo.s    590 | Comment     | 11 |         |    0 | 00/1195               | *<sym>
+  867 |  1 asmdemo.s    591 | Code        | 11 |         |    2 | 00/1195 : A9 01       | exitDK               lda      #1                   ; escape : set quit flag
+  868 |  1 asmdemo.s    592 | Code        | 11 |         |    3 | 00/1197 : 8D 6A 0F    |                      sta      quitflag             
+  869 |  1 asmdemo.s    593 | Code        | 11 |         |    1 | 00/119A : 60          |                      rts                           
+  870 |  1 asmdemo.s    594 | Comment     | 11 |         |    0 | 00/119B               | *<sym>
+  871 |  1 asmdemo.s    595 | Empty       | 11 |         |    0 | 00/119B               | doInverse                                          
+  872 |  1 asmdemo.s    596 | Code        | 11 |         |    3 | 00/119B : AD CC 0F    |                      lda      inverse              
+  873 |  1 asmdemo.s    597 | Code        | 11 |         |    2 | 00/119E : 49 01       |                      eor      #$01                 
+  874 |  1 asmdemo.s    598 | Code        | 11 |         |    3 | 00/11A0 : 8D CC 0F    |                      sta      inverse              
+  875 |  1 asmdemo.s    599 | Code        | 11 |         |    3 | 00/11A3 : 4C 3A 0E    |                      jmp      startimage           
+  876 |  1 asmdemo.s    600 | Empty       | 11 |         |    0 | 00/11A6               |                                                    
+  877 |  1 asmdemo.s    601 | Comment     | 11 |         |    0 | 00/11A6               | *<sym>
+  878 |  1 asmdemo.s    602 | Empty       | 11 |         |    0 | 00/11A6               | WaitForKeyPress                                    
+  879 |  1 asmdemo.s    603 | Code        | 11 |         |    3 | 00/11A6 : AD 00 C0    |                      lda      {$C000}              
+  880 |  1 asmdemo.s    604 | Code        | 11 |         |    2 | 00/11A9 : 10 FB       |                      bpl      WaitForKeyPress      
+  881 |  1 asmdemo.s    605 | Code        | 11 |         |    3 | 00/11AB : 8D 10 C0    |                      sta      {$C010}              
+  882 |  1 asmdemo.s    606 | Code        | 11 |         |    1 | 00/11AE : 60          |                      rts                           
+  883 |  1 asmdemo.s    607 | Empty       | 11 |         |    0 | 00/11AF               |                                                    
+  884 |  1 asmdemo.s    608 | Comment     | 11 |         |    0 | 00/11AF               | * ------------------ utils ------------------
+  885 |  1 asmdemo.s    609 | Empty       | 11 |         |    0 | 00/11AF               |                                                    
+  886 |  1 asmdemo.s    610 | Comment     | 11 |         |    0 | 00/11AF               | *<sym>
+  887 |  1 asmdemo.s    611 | Empty       | 11 |         |    0 | 00/11AF               | testLength                                         
+  888 |  1 asmdemo.s    612 | Code        | 11 |         |    3 | 00/11AF : AD 33 14    |                      lda      filelength+2         ;       Byte 3 must 0 (else file size would be > $FFFF)
+  889 |  1 asmdemo.s    613 | Code        | 11 |         |    2 | 00/11B2 : F0 02       |                      beq      ozunid_7             
+  890 |  1 asmdemo.s    614 | Code        | 11 |         |    1 | 00/11B4 : 38          |                      sec                           
+  891 |  1 asmdemo.s    615 | Code        | 11 |         |    1 | 00/11B5 : 60          |                      rts                           
+  892 |  1 asmdemo.s    616 | Empty       | 11 |         |    0 | 00/11B6               | ozunid_7                                           
+  893 |  1 asmdemo.s    617 | Code        | 11 |         |    3 | 00/11B6 : AD 32 14    |                      lda      filelength+1         ; compare file length
+  894 |  1 asmdemo.s    618 | Code        | 11 |         |    2 | 00/11B9 : C9 20       |                      cmp      #>{$2000}            ; to maxlen
+  895 |  1 asmdemo.s    619 | Code        | 11 |         |    2 | 00/11BB : D0 05       |                      bne      ozunid_8             
+  896 |  1 asmdemo.s    620 | Code        | 11 |         |    3 | 00/11BD : AD 31 14    |                      lda      filelength           
+  897 |  1 asmdemo.s    621 | Code        | 11 |         |    2 | 00/11C0 : C9 00       |                      cmp      #<{$2000}            
+  898 |  1 asmdemo.s    622 | Empty       | 11 |         |    0 | 00/11C2               | ozunid_8                                           
+  899 |  1 asmdemo.s    623 | Code        | 11 |         |    2 | 00/11C2 : 90 04       |                      bcc      lowerlen             ; lower : OK
+  900 |  1 asmdemo.s    624 | Code        | 11 |         |    2 | 00/11C4 : D0 04       |                      bne      higherlen            ; higher : KO
+  901 |  1 asmdemo.s    625 | Code        | 11 |         |    2 | 00/11C6 : F0 00       |                      beq      lowerlen             ; = : OK
+  902 |  1 asmdemo.s    626 | Comment     | 11 |         |    0 | 00/11C8               | *<sym>
+  903 |  1 asmdemo.s    627 | Code        | 11 |         |    1 | 00/11C8 : 18          | lowerlen             clc                           
+  904 |  1 asmdemo.s    628 | Code        | 11 |         |    1 | 00/11C9 : 60          |                      rts                           
+  905 |  1 asmdemo.s    629 | Comment     | 11 |         |    0 | 00/11CA               | *<sym>
+  906 |  1 asmdemo.s    630 | Empty       | 11 |         |    0 | 00/11CA               | higherlen                                          
+  907 |  1 asmdemo.s    631 | Code        | 11 |         |    1 | 00/11CA : 38          |                      sec                           
+  908 |  1 asmdemo.s    632 | Code        | 11 |         |    1 | 00/11CB : 60          |                      rts                           
+  909 |  1 asmdemo.s    633 | Comment     | 11 |         |    0 | 00/11CC               | *
+  910 |  1 asmdemo.s    634 | Comment     | 11 |         |    0 | 00/11CC               | * open BMP file
+  911 |  1 asmdemo.s    635 | Empty       | 11 |         |    0 | 00/11CC               |                                                    
+  912 |  1 asmdemo.s    636 | Comment     | 11 |         |    0 | 00/11CC               | *<sym>
+  913 |  1 asmdemo.s    637 | Empty       | 11 |         |    0 | 00/11CC               | openBMP                                            
+  914 |  1 asmdemo.s    638 | Code        | 11 |         |    3 | 00/11CC : 20 00 BF    |                      jsr      {$BF00}              ; OPEN file
+  915 |  1 asmdemo.s    639 | Data        | 11 |         |    1 | 00/11CF : C8          |                      dfb      {$C8}                
+  916 |  1 asmdemo.s    640 | Data        | 11 |         |    2 | 00/11D0 : 09 13       |                      da       OPEN_parms           
+  917 |  1 asmdemo.s    641 | Code        | 11 |         |    2 | 00/11D2 : 90 01       |                      bcc      GetEOF               ; no error, go on
+  918 |  1 asmdemo.s    642 | Code        | 11 |         |    1 | 00/11D4 : 60          |                      rts                           
+  919 |  1 asmdemo.s    643 | Comment     | 11 |         |    0 | 00/11D5               | *<sym>
+  920 |  1 asmdemo.s    644 | Empty       | 11 |         |    0 | 00/11D5               | GetEOF                                             
+  921 |  1 asmdemo.s    645 | Code        | 11 |         |    3 | 00/11D5 : AD 0E 13    |                      lda      ref                  ; get reference to file (got it in open mli call above)
+  922 |  1 asmdemo.s    646 | Code        | 11 |         |    3 | 00/11D8 : 8D 02 13    |                      sta      refread              ; set it for reading
+  923 |  1 asmdemo.s    647 | Code        | 11 |         |    3 | 00/11DB : 8D 30 14    |                      sta      refd1                ; set if for geteof
+  924 |  1 asmdemo.s    648 | Empty       | 11 |         |    0 | 00/11DE               |                                                    
+  925 |  1 asmdemo.s    649 | Code        | 11 |         |    3 | 00/11DE : 20 00 BF    |                      jsr      {$BF00}              ; Call GetEOF to get length of file
+  926 |  1 asmdemo.s    650 | Data        | 11 |         |    1 | 00/11E1 : D1          |                      dfb      {$d1}                
+  927 |  1 asmdemo.s    651 | Data        | 11 |         |    2 | 00/11E2 : 2F 14       |                      da       GET_EOF_param        
+  928 |  1 asmdemo.s    652 | Code        | 11 |         |    2 | 00/11E4 : 90 01       |                      bcc      geteofOK             ; if call was ok then go on
+  929 |  1 asmdemo.s    653 | Code        | 11 |         |    1 | 00/11E6 : 60          |                      rts                           
+  930 |  1 asmdemo.s    654 | Comment     | 11 |         |    0 | 00/11E7               | *<sym>
+  931 |  1 asmdemo.s    655 | Empty       | 11 |         |    0 | 00/11E7               | geteofOK                                           
+  932 |  1 asmdemo.s    656 | Code        | 11 |         |    3 | 00/11E7 : 20 AF 11    |                      jsr      testLength           ; compare maxlen (max size for an image in memory ans size of BMP file
+  933 |  1 asmdemo.s    657 | Code        | 11 |         |    2 | 00/11EA : 90 01       |                      bcc      LoadBMP              ; ok if file size < max size
+  934 |  1 asmdemo.s    658 | Code        | 11 |         |    1 | 00/11EC : 60          |                      rts                           
+  935 |  1 asmdemo.s    659 | Empty       | 11 |         |    0 | 00/11ED               |                                                    
+  936 |  1 asmdemo.s    660 | Comment     | 11 |         |    0 | 00/11ED               | *<sym>
+  937 |  1 asmdemo.s    661 | Empty       | 11 |         |    0 | 00/11ED               | LoadBMP                                            ; read BMP file
+  938 |  1 asmdemo.s    662 | Code        | 11 |         |    3 | 00/11ED : AD 0E 13    |                      lda      ref                  ; set reference to file (got it in open mli call above)
+  939 |  1 asmdemo.s    663 | Code        | 11 |         |    3 | 00/11F0 : 8D 02 13    |                      sta      refread              
+  940 |  1 asmdemo.s    664 | Code        | 11 |         |    3 | 00/11F3 : 20 00 BF    |                      jsr      {$BF00}              
+  941 |  1 asmdemo.s    665 | Data        | 11 |         |    1 | 00/11F6 : CA          |                      dfb      {$CA}                
+  942 |  1 asmdemo.s    666 | Data        | 11 |         |    2 | 00/11F7 : 01 13       |                      da       READ_param           
+  943 |  1 asmdemo.s    667 | Code        | 11 |         |    2 | 00/11F9 : 90 01       |                      bcc      CloseBMP             
+  944 |  1 asmdemo.s    668 | Code        | 11 |         |    1 | 00/11FB : 60          |                      rts                           
+  945 |  1 asmdemo.s    669 | Comment     | 11 |         |    0 | 00/11FC               | *<sym>
+  946 |  1 asmdemo.s    670 | Empty       | 11 |         |    0 | 00/11FC               | CloseBMP                                           
+  947 |  1 asmdemo.s    671 | Code        | 11 |         |    3 | 00/11FC : AD 0E 13    |                      lda      ref                  
+  948 |  1 asmdemo.s    672 | Code        | 11 |         |    3 | 00/11FF : 8D 35 14    |                      sta      refclose             
+  949 |  1 asmdemo.s    673 | Code        | 11 |         |    3 | 00/1202 : 20 00 BF    |                      jsr      {$BF00}              
+  950 |  1 asmdemo.s    674 | Data        | 11 |         |    1 | 00/1205 : CC          |                      dfb      {$CC}                
+  951 |  1 asmdemo.s    675 | Data        | 11 |         |    2 | 00/1206 : 34 14       |                      da       CLOSE_param          
+  952 |  1 asmdemo.s    676 | Code        | 11 |         |    1 | 00/1208 : 60          |                      rts                           
+  953 |  1 asmdemo.s    677 | Empty       | 11 |         |    0 | 00/1209               |                                                    
+  954 |  1 asmdemo.s    678 | Comment     | 11 |         |    0 | 00/1209               | * Set DHGR mode (unused)
+  955 |  1 asmdemo.s    679 | Comment     | 11 |         |    0 | 00/1209               | *<sym>
+  956 |  1 asmdemo.s    680 | Empty       | 11 |         |    0 | 00/1209               | dodhgr                                             
+  957 |  1 asmdemo.s    681 | Code        | 11 |         |    3 | 00/1209 : 8D 50 C0    |                      sta      {$C050}              
+  958 |  1 asmdemo.s    682 | Code        | 11 |         |    3 | 00/120C : 8D 57 C0    |                      sta      {$C057}              
+  959 |  1 asmdemo.s    683 | Code        | 11 |         |    3 | 00/120F : 8D 52 C0    |                      sta      {$C052}              
+  960 |  1 asmdemo.s    684 | Code        | 11 |         |    3 | 00/1212 : 8D 5E C0    |                      sta      {$C05E}              
+  961 |  1 asmdemo.s    685 | Code        | 11 |         |    3 | 00/1215 : 8D 0D C0    |                      sta      {$C00D}              
+  962 |  1 asmdemo.s    686 | Code        | 11 |         |    3 | 00/1218 : 8D 01 C0    |                      sta      {$C001}              
+  963 |  1 asmdemo.s    687 | Code        | 11 |         |    1 | 00/121B : 60          |                      rts                           
+  964 |  1 asmdemo.s    688 | Empty       | 11 |         |    0 | 00/121C               |                                                    
+  965 |  1 asmdemo.s    689 | Comment     | 11 |         |    0 | 00/121C               | * Clear DHGR screen   
+  966 |  1 asmdemo.s    690 | Equivalence | 11 |         |    0 | 00/121C               | screenbase           equ      $2000                ; address of screen memory
+  967 |  1 asmdemo.s    691 | Comment     | 11 |         |    0 | 00/121C               | *<sym> 
+  968 |  1 asmdemo.s    692 | Empty       | 11 |         |    0 | 00/121C               | clearscrn                                          
+  969 |  1 asmdemo.s    693 | Code        | 11 |         |    2 | 00/121C : A9 00       |                      lda      #<{$2000}            
+  970 |  1 asmdemo.s    694 | Code        | 11 |         |    2 | 00/121E : 85 06       |                      sta      {$06}                
+  971 |  1 asmdemo.s    695 | Code        | 11 |         |    2 | 00/1220 : A9 20       |                      lda      #>{$2000}+1          
+  972 |  1 asmdemo.s    696 | Code        | 11 |         |    2 | 00/1222 : 85 07       |                      sta      {$06}+1              
+  973 |  1 asmdemo.s    697 | Code        | 11 |         |    2 | 00/1224 : A0 00       |                      ldy      #0                   
+  974 |  1 asmdemo.s    698 | Code        | 11 |         |    2 | 00/1226 : A9 00       |                      lda      #0                   
+  975 |  1 asmdemo.s    699 | Code        | 11 |         |    3 | 00/1228 : 8D 00 C0    |                      sta      $C000                
+  976 |  1 asmdemo.s    700 | Comment     | 11 |         |    0 | 00/122B               | *<sym> 
+  977 |  1 asmdemo.s    701 | Empty       | 11 |         |    0 | 00/122B               | clrloop                                            
+  978 |  1 asmdemo.s    702 | Code        | 11 |         |    2 | 00/122B : 91 06       |                      sta      ({$06}),y            
+  979 |  1 asmdemo.s    703 | Code        | 11 |         |    3 | 00/122D : 8D 05 C0    |                      sta      {$C005}              ; write char in aux
+  980 |  1 asmdemo.s    704 | Code        | 11 |         |    2 | 00/1230 : 91 06       |                      sta      ({$06}),y            
+  981 |  1 asmdemo.s    705 | Code        | 11 |         |    3 | 00/1232 : 8D 04 C0    |                      sta      {$C004}              
+  982 |  1 asmdemo.s    706 | Code        | 11 |         |    1 | 00/1235 : C8          |                      iny                           
+  983 |  1 asmdemo.s    707 | Code        | 11 |         |    2 | 00/1236 : D0 F3       |                      bne      clrloop              
+  984 |  1 asmdemo.s    708 | Code        | 11 |         |    2 | 00/1238 : E6 07       |                      inc      {$06}+1              
+  985 |  1 asmdemo.s    709 | Code        | 11 |         |    2 | 00/123A : A6 07       |                      ldx      {$06}+1              
+  986 |  1 asmdemo.s    710 | Code        | 11 |         |    2 | 00/123C : E0 40       |                      cpx      #$40                 
+  987 |  1 asmdemo.s    711 | Code        | 11 |         |    2 | 00/123E : D0 EB       |                      bne      clrloop              
+  988 |  1 asmdemo.s    712 | Code        | 11 |         |    3 | 00/1240 : 8D 01 C0    |                      sta      $C001                
+  989 |  1 asmdemo.s    713 | Code        | 11 |         |    1 | 00/1243 : 60          |                      rts                           
+  990 |  1 asmdemo.s    714 | Empty       | 11 |         |    0 | 00/1244               |                                                    
+  991 |  1 asmdemo.s    715 | Comment     | 11 |         |    0 | 00/1244               | *<sym>
+  992 |  1 asmdemo.s    716 | Empty       | 11 |         |    0 | 00/1244               | DoTextScreen                                       
+  993 |  1 asmdemo.s    717 | Code        | 11 |         |    3 | 00/1244 : 8D 00 C0    |                      sta      $c000                ;80store off
+  994 |  1 asmdemo.s    718 | Code        | 11 |         |    3 | 00/1247 : 8D 02 C0    |                      sta      $c002                ;RAMRD main
+  995 |  1 asmdemo.s    719 | Code        | 11 |         |    3 | 00/124A : 8D 04 C0    |                      sta      $c004                ;RAMWRT main
+  996 |  1 asmdemo.s    720 | Code        | 11 |         |    3 | 00/124D : 8D 0C C0    |                      sta      $c00c                ;80col off
+  997 |  1 asmdemo.s    721 | Code        | 11 |         |    3 | 00/1250 : 8D 0E C0    |                      sta      $c00e                ;Altcharset off
+  998 |  1 asmdemo.s    722 | Code        | 11 |         |    3 | 00/1253 : 8D 81 C0    |                      sta      $c081                ;write RAM, read ROM (2nd 4k bank)
+  999 |  1 asmdemo.s    723 | Code        | 11 |         |    3 | 00/1256 : 20 2F FB    |                      jsr      {$FB2F}              
+ 1000 |  1 asmdemo.s    724 | Code        | 11 |         |    3 | 00/1259 : 20 58 FC    |                      jsr      {$FC58}              
+ 1001 |  1 asmdemo.s    725 | Code        | 11 |         |    3 | 00/125C : 20 84 FE    |                      jsr      {$FE84}              
+ 1002 |  1 asmdemo.s    726 | Code        | 11 |         |    3 | 00/125F : 20 93 FE    |                      jsr      {$fe93}              
+ 1003 |  1 asmdemo.s    727 | Code        | 11 |         |    3 | 00/1262 : 20 89 FE    |                      jsr      {$fe89}              
+ 1004 |  1 asmdemo.s    728 | Code        | 11 |         |    1 | 00/1265 : 60          |                      rts                           
+ 1005 |  1 asmdemo.s    729 | Comment     | 11 |         |    0 | 00/1266               | *
+ 1006 |  1 asmdemo.s    730 | Comment     | 11 |         |    0 | 00/1266               | *<sym>
+ 1007 |  1 asmdemo.s    731 | Empty       | 11 |         |    0 | 00/1266               | clearbuffer                                        
+ 1008 |  1 asmdemo.s    732 | Comment     | 11 |         |    0 | 00/1266               | * clear memory 
+ 1009 |  1 asmdemo.s    733 | Code        | 11 |         |    2 | 00/1266 : A9 7B       |                      lda      #<outbuff            
+ 1010 |  1 asmdemo.s    734 | Code        | 11 |         |    2 | 00/1268 : 85 06       |                      sta      {$06}                
+ 1011 |  1 asmdemo.s    735 | Code        | 11 |         |    2 | 00/126A : A9 0F       |                      lda      #>outbuff            
+ 1012 |  1 asmdemo.s    736 | Code        | 11 |         |    2 | 00/126C : 85 07       |                      sta      {$06}+1              
+ 1013 |  1 asmdemo.s    737 | Code        | 11 |         |    2 | 00/126E : A9 00       |                      lda      #0                   
+ 1014 |  1 asmdemo.s    738 | Code        | 11 |         |    2 | 00/1270 : A0 00       |                      ldy      #0                   
+ 1015 |  1 asmdemo.s    739 | Comment     | 11 |         |    0 | 00/1272               | *<sym>
+ 1016 |  1 asmdemo.s    740 | Code        | 11 |         |    2 | 00/1272 : 91 06       | pokeZ                sta      ({$06}),y            
+ 1017 |  1 asmdemo.s    741 | Code        | 11 |         |    1 | 00/1274 : C8          |                      iny                           
+ 1018 |  1 asmdemo.s    742 | Code        | 11 |         |    2 | 00/1275 : C0 50       |                      cpy      #80                  
+ 1019 |  1 asmdemo.s    743 | Code        | 11 |         |    2 | 00/1277 : D0 F9       |                      bne      pokeZ                
+ 1020 |  1 asmdemo.s    744 | Code        | 11 |         |    1 | 00/1279 : 60          |                      rts                           
+ 1021 |  1 asmdemo.s    745 | Comment     | 11 |         |    0 | 00/127A               | *               
+ 1022 |  1 asmdemo.s    746 | Comment     | 11 |         |    0 | 00/127A               | *<sym>
+ 1023 |  1 asmdemo.s    747 | Empty       | 11 |         |    0 | 00/127A               | ProDOSQuit                                         
+ 1024 |  1 asmdemo.s    748 | Code        | 11 |         |    3 | 00/127A : 20 00 BF    |                      jsr      $BF00                ; ProDOS Quit
+ 1025 |  1 asmdemo.s    749 | Data        | 11 |         |    1 | 00/127D : 65          |                      dfb      $65                  
+ 1026 |  1 asmdemo.s    750 | Data        | 11 |         |    2 | 00/127E : 81 12       |                      dw       QuitParams           
+ 1027 |  1 asmdemo.s    751 | Code        | 11 |         |    1 | 00/1280 : 60          |                      rts                           
+ 1028 |  1 asmdemo.s    752 | Comment     | 11 |         |    0 | 00/1281               | *<sym>
+ 1029 |  1 asmdemo.s    753 | Data        | 11 |         |    1 | 00/1281 : 04          | QuitParams           dfb      4                    
+ 1030 |  1 asmdemo.s    754 | Data        | 11 |         |    8 | 00/1282 : 00 00 00 00 |                      dw       0,0,0,0              ; standard parameters for Quit call
+      |                     |             |    |         |      |           00 00 00 00 |
+ 1031 |  1 asmdemo.s    755 | Comment     | 11 |         |    0 | 00/128A               | *
+ 1032 |  1 asmdemo.s    756 | Comment     | 11 |         |    0 | 00/128A               | *<sym>
+ 1033 |  1 asmdemo.s    757 | Empty       | 11 |         |    0 | 00/128A               | computeBytes                                       
+ 1034 |  1 asmdemo.s    758 | Comment     | 11 |         |    0 | 00/128A               | * given the # of bits in A,X (lo,hi), computes the # of bytes
+ 1035 |  1 asmdemo.s    759 | Comment     | 11 |         |    0 | 00/128A               | * to hold these bits on Apple II screen (7 pixels per byte)           
+ 1036 |  1 asmdemo.s    760 | Code        | 11 |         |    3 | 00/128A : 8D B2 12    |                      sta      mybyte               ; number of bits (16 bits integer)
+ 1037 |  1 asmdemo.s    761 | Code        | 11 |         |    3 | 00/128D : 8E B3 12    |                      stx      mybyte+1             
+ 1038 |  1 asmdemo.s    762 | Code        | 11 |         |    2 | 00/1290 : A2 01       |                      ldx      #1                   ; x = number of needed bytes
+ 1039 |  1 asmdemo.s    763 | Comment     | 11 |         |    0 | 00/1292               | *<sym>
+ 1040 |  1 asmdemo.s    764 | Empty       | 11 |         |    0 | 00/1292               | loopbyte                                           
+ 1041 |  1 asmdemo.s    765 | Code        | 11 |         |    3 | 00/1292 : AD B2 12    |                      lda      mybyte               
+ 1042 |  1 asmdemo.s    766 | Code        | 11 |         |    1 | 00/1295 : 38          |                      sec                           
+ 1043 |  1 asmdemo.s    767 | Code        | 11 |         |    2 | 00/1296 : E9 07       |                      sbc      #7                   
+ 1044 |  1 asmdemo.s    768 | Code        | 11 |         |    3 | 00/1298 : 8D B2 12    |                      sta      mybyte               
+ 1045 |  1 asmdemo.s    769 | Code        | 11 |         |    3 | 00/129B : AD B3 12    |                      lda      mybyte+1             
+ 1046 |  1 asmdemo.s    770 | Code        | 11 |         |    2 | 00/129E : E9 00       |                      sbc      #0                   
+ 1047 |  1 asmdemo.s    771 | Code        | 11 |         |    3 | 00/12A0 : 8D B3 12    |                      sta      mybyte+1             
+ 1048 |  1 asmdemo.s    772 | Empty       | 11 |         |    0 | 00/12A3               |                                                    
+ 1049 |  1 asmdemo.s    773 | Code        | 11 |         |    3 | 00/12A3 : 0D B2 12    |                      ora      mybyte               
+ 1050 |  1 asmdemo.s    774 | Code        | 11 |         |    2 | 00/12A6 : F0 09       |                      beq      ozunid_9             ; = 0 : exit, nb_byte is correct
+ 1051 |  1 asmdemo.s    775 | Code        | 11 |         |    3 | 00/12A8 : AD B3 12    |                      lda      mybyte+1             
+ 1052 |  1 asmdemo.s    776 | Code        | 11 |         |    2 | 00/12AB : 30 04       |                      bmi      ozunid_9             ; < 0 : exit, nb_byte is correct
+ 1053 |  1 asmdemo.s    777 | Comment     | 11 |         |    0 | 00/12AD               |                                         ; > 0 : loop
+ 1054 |  1 asmdemo.s    778 | Code        | 11 |         |    1 | 00/12AD : E8          |                      inx                           
+ 1055 |  1 asmdemo.s    779 | Code        | 11 |         |    3 | 00/12AE : 4C 92 12    |                      jmp      loopbyte             
+ 1056 |  1 asmdemo.s    780 | Empty       | 11 |         |    0 | 00/12B1               | ozunid_9                                           
+ 1057 |  1 asmdemo.s    781 | Code        | 11 |         |    1 | 00/12B1 : 60          |                      rts                           
+ 1058 |  1 asmdemo.s    782 | Comment     | 11 |         |    0 | 00/12B2               | *<sym>
+ 1059 |  1 asmdemo.s    783 | Empty       | 11 |         |    0 | 00/12B2               | mybyte                                             
+ 1060 |  1 asmdemo.s    784 | Data        | 11 |         |    2 | 00/12B2 : 00 00       |                      ds       2                    
+ 1061 |  1 asmdemo.s    785 | Comment     | 11 |         |    0 | 00/12B4               | *
+ 1062 |  1 asmdemo.s    786 | Comment     | 11 |         |    0 | 00/12B4               | *
+ 1063 |  1 asmdemo.s    787 | Comment     | 11 |         |    0 | 00/12B4               | *********** PREFIX *************
+ 1064 |  1 asmdemo.s    788 | Comment     | 11 |         |    0 | 00/12B4               | * Set prefix using current préfix :
+ 1065 |  1 asmdemo.s    789 | Comment     | 11 |         |    0 | 00/12B4               | * Call GETPREFIX, put it in "path" string
+ 1066 |  1 asmdemo.s    790 | Comment     | 11 |         |    0 | 00/12B4               | * If no prefix (i.e. length of "path" string = 0),
+ 1067 |  1 asmdemo.s    791 | Comment     | 11 |         |    0 | 00/12B4               | * then get préfix from last used disk, unsing ONLINE call
+ 1068 |  1 asmdemo.s    792 | Comment     | 11 |         |    0 | 00/12B4               | * If any error, exit with carry set
+ 1069 |  1 asmdemo.s    793 | Comment     | 11 |         |    0 | 00/12B4               | * else exit with carry clear
+ 1070 |  1 asmdemo.s    794 | Comment     | 11 |         |    0 | 00/12B4               | *
+ 1071 |  1 asmdemo.s    795 | Comment     | 11 |         |    0 | 00/12B4               | *<sym>
+ 1072 |  1 asmdemo.s    796 | Empty       | 11 |         |    0 | 00/12B4               | doprefix                                           
+ 1073 |  1 asmdemo.s    797 | Code        | 11 |         |    3 | 00/12B4 : 20 00 BF    |                      jsr      {$BF00}              ; getprefix MLI call ; put prefix in "path"
+ 1074 |  1 asmdemo.s    798 | Data        | 11 |         |    1 | 00/12B7 : C7          |                      dfb      {$c7}                
+ 1075 |  1 asmdemo.s    799 | Data        | 11 |         |    2 | 00/12B8 : 13 13       |                      da       GET_PREFIX_param     
+ 1076 |  1 asmdemo.s    800 | Code        | 11 |         |    2 | 00/12BA : 90 01       |                      bcc      gpOk                 
+ 1077 |  1 asmdemo.s    801 | Code        | 11 |         |    1 | 00/12BC : 60          |                      rts                           
+ 1078 |  1 asmdemo.s    802 | Comment     | 11 |         |    0 | 00/12BD               | *<sym>
+ 1079 |  1 asmdemo.s    803 | Empty       | 11 |         |    0 | 00/12BD               | gpOk                                               
+ 1080 |  1 asmdemo.s    804 | Code        | 11 |         |    3 | 00/12BD : AD 1D 13    |                      lda      path                 ; first char = length
+ 1081 |  1 asmdemo.s    805 | Code        | 11 |         |    2 | 00/12C0 : F0 03       |                      beq      noprefix             ; if length = 0 => no prefix
+ 1082 |  1 asmdemo.s    806 | Code        | 11 |         |    3 | 00/12C2 : 4C 00 13    |                      jmp      prefixSetOK          ; else prefix already set, exit
+ 1083 |  1 asmdemo.s    807 | Comment     | 11 |         |    0 | 00/12C5               | *<sym>
+ 1084 |  1 asmdemo.s    808 | Empty       | 11 |         |    0 | 00/12C5               | noprefix                                           
+ 1085 |  1 asmdemo.s    809 | Code        | 11 |         |    3 | 00/12C5 : AD 30 BF    |                      lda      {$BF30}              ; last used slot/drive
+ 1086 |  1 asmdemo.s    810 | Code        | 11 |         |    3 | 00/12C8 : 8D 1A 13    |                      sta      unit                 ; param du mli online
+ 1087 |  1 asmdemo.s    811 | Code        | 11 |         |    3 | 00/12CB : 20 00 BF    |                      jsr      {$BF00}              
+ 1088 |  1 asmdemo.s    812 | Data        | 11 |         |    1 | 00/12CE : C5          |                      dfb      {$C5}                ; on_line : get prefix in path
+ 1089 |  1 asmdemo.s    813 | Data        | 11 |         |    2 | 00/12CF : 19 13       |                      da       ONLINE_param         
+ 1090 |  1 asmdemo.s    814 | Code        | 11 |         |    2 | 00/12D1 : 90 01       |                      bcc      onlineOK             
+ 1091 |  1 asmdemo.s    815 | Code        | 11 |         |    1 | 00/12D3 : 60          |                      rts                           
+ 1092 |  1 asmdemo.s    816 | Comment     | 11 |         |    0 | 00/12D4               | *<sym>
+ 1093 |  1 asmdemo.s    817 | Empty       | 11 |         |    0 | 00/12D4               | onlineOK                                           
+ 1094 |  1 asmdemo.s    818 | Code        | 11 |         |    3 | 00/12D4 : AD 1D 13    |                      lda      path                 
+ 1095 |  1 asmdemo.s    819 | Code        | 11 |         |    2 | 00/12D7 : 29 0F       |                      and      #$0f                 ; length in low nibble
+ 1096 |  1 asmdemo.s    820 | Code        | 11 |         |    3 | 00/12D9 : 8D 1D 13    |                      sta      path                 
+ 1097 |  1 asmdemo.s    821 | Code        | 11 |         |    1 | 00/12DC : AA          |                      tax                           
+ 1098 |  1 asmdemo.s    822 | Comment     | 11 |         |    0 | 00/12DD               | *<sym>
+ 1099 |  1 asmdemo.s    823 | Code        | 11 |         |    3 | 00/12DD : BD 1D 13    | ozunid_10            lda      path,x               ; shift prefix by one byte
+ 1100 |  1 asmdemo.s    824 | Code        | 11 |         |    3 | 00/12E0 : 9D 1E 13    |                      sta      path+1,x             ;
+ 1101 |  1 asmdemo.s    825 | Code        | 11 |         |    1 | 00/12E3 : CA          |                      dex                           
+ 1102 |  1 asmdemo.s    826 | Code        | 11 |         |    2 | 00/12E4 : D0 F7       |                      bne      ozunid_10            ; all string
+ 1103 |  1 asmdemo.s    827 | Code        | 11 |         |    3 | 00/12E6 : EE 1D 13    |                      inc      path                 
+ 1104 |  1 asmdemo.s    828 | Code        | 11 |         |    3 | 00/12E9 : EE 1D 13    |                      inc      path                 ; length = length + 2
+ 1105 |  1 asmdemo.s    829 | Code        | 11 |         |    3 | 00/12EC : AE 1D 13    |                      ldx      path                 ;
+ 1106 |  1 asmdemo.s    830 | Code        | 11 |         |    2 | 00/12EF : A9 AF       |                      lda      #$af                 ; = '/'
+ 1107 |  1 asmdemo.s    831 | Code        | 11 |         |    3 | 00/12F1 : 9D 1D 13    |                      sta      path,x               ; insert '/'' at the end
+ 1108 |  1 asmdemo.s    832 | Code        | 11 |         |    3 | 00/12F4 : 8D 1E 13    |                      sta      path+1               ; and '/'' at the beginning
+ 1109 |  1 asmdemo.s    833 | Empty       | 11 |         |    0 | 00/12F7               |                                                    
+ 1110 |  1 asmdemo.s    834 | Code        | 11 |         |    3 | 00/12F7 : 20 00 BF    |                      jsr      {$BF00}              ; set_prefix (in the form : /prefix/)
+ 1111 |  1 asmdemo.s    835 | Data        | 11 |         |    1 | 00/12FA : C6          |                      dfb      {$c6}                
+ 1112 |  1 asmdemo.s    836 | Data        | 11 |         |    2 | 00/12FB : 16 13       |                      da       SET_PREFIX_param     
+ 1113 |  1 asmdemo.s    837 | Code        | 11 |         |    2 | 00/12FD : 90 01       |                      bcc      prefixSetOK          
+ 1114 |  1 asmdemo.s    838 | Code        | 11 |         |    1 | 00/12FF : 60          |                      rts                           
+ 1115 |  1 asmdemo.s    839 | Comment     | 11 |         |    0 | 00/1300               | *<sym>
+ 1116 |  1 asmdemo.s    840 | Empty       | 11 |         |    0 | 00/1300               | prefixSetOK                                        
+ 1117 |  1 asmdemo.s    841 | Code        | 11 |         |    1 | 00/1300 : 60          |                      rts                           
+ 1118 |  1 asmdemo.s    842 | Comment     | 11 |         |    0 | 00/1301               | *
+ 1119 |  1 asmdemo.s    843 | Comment     | 11 |         |    0 | 00/1301               | * * * * * * * * * * * * MLI Call parameters * * * * * * * * * * * * 
+ 1120 |  1 asmdemo.s    844 | Comment     | 11 |         |    0 | 00/1301               | *
+ 1121 |  1 asmdemo.s    845 | Comment     | 11 |         |    0 | 00/1301               | * * * * MLI Call READ parameters * * * * 
+ 1122 |  1 asmdemo.s    846 | Comment     | 11 |         |    0 | 00/1301               | *<sym>
+ 1123 |  1 asmdemo.s    847 | Empty       | 11 |         |    0 | 00/1301               | READ_param                                         ; READ file
+ 1124 |  1 asmdemo.s    848 | Data        | 11 |         |    1 | 00/1301 : 04          |                      hex      04                   ; number of params.
+ 1125 |  1 asmdemo.s    849 | Comment     | 11 |         |    0 | 00/1302               | *<sym>
+ 1126 |  1 asmdemo.s    850 | Data        | 11 |         |    1 | 00/1302 : 00          | refread              hex      00                   ; ref #
+ 1127 |  1 asmdemo.s    851 | Comment     | 11 |         |    0 | 00/1303               | *<sym>
+ 1128 |  1 asmdemo.s    852 | Data        | 11 |         |    2 | 00/1303 : 00 60       | rdbuffa              da       {$6000}              
+ 1129 |  1 asmdemo.s    853 | Comment     | 11 |         |    0 | 00/1305               | *<sym>
+ 1130 |  1 asmdemo.s    854 | Data        | 11 |         |    2 | 00/1305 : 00 20       | rreq                 hex      0020                 ; bytes requested
+ 1131 |  1 asmdemo.s    855 | Comment     | 11 |         |    0 | 00/1307               | *<sym>
+ 1132 |  1 asmdemo.s    856 | Data        | 11 |         |    2 | 00/1307 : 00 00       | readlen              hex      0000                 ; bytes read
+ 1133 |  1 asmdemo.s    857 | Comment     | 11 |         |    0 | 00/1309               | *
+ 1134 |  1 asmdemo.s    858 | Comment     | 11 |         |    0 | 00/1309               | * * * * MLI Call OPEN parameters * * * * 
+ 1135 |  1 asmdemo.s    859 | Comment     | 11 |         |    0 | 00/1309               | *<sym>
+ 1136 |  1 asmdemo.s    860 | Empty       | 11 |         |    0 | 00/1309               | OPEN_parms                                         ; OPEN file for reading
+ 1137 |  1 asmdemo.s    861 | Data        | 11 |         |    1 | 00/1309 : 03          |                      hex      03                   ; number of params.
+ 1138 |  1 asmdemo.s    862 | Data        | 11 |         |    2 | 00/130A : 0F 13       |                      da       fname                ; path name
+ 1139 |  1 asmdemo.s    863 | Comment     | 11 |         |    0 | 00/130C               | *<sym>
+ 1140 |  1 asmdemo.s    864 | Data        | 11 |         |    2 | 00/130C : 00 00       | fbuff                hex      0000                 
+ 1141 |  1 asmdemo.s    865 | Comment     | 11 |         |    0 | 00/130E               | *<sym>
+ 1142 |  1 asmdemo.s    866 | Data        | 11 |         |    1 | 00/130E : 00          | ref                  hex      00                   
+ 1143 |  1 asmdemo.s    867 | Comment     | 11 |         |    0 | 00/130F               | *<sym>
+ 1144 |  1 asmdemo.s    868 | Data        | 11 |         |    4 | 00/130F : 03 49 4D 47 | fname                str      'IMG'                
+ 1145 |  1 asmdemo.s    869 | Comment     | 11 |         |    0 | 00/1313               | *
+ 1146 |  1 asmdemo.s    870 | Comment     | 11 |         |    0 | 00/1313               | * * * * MLI Call GET_PREFIX parameters * * * * 
+ 1147 |  1 asmdemo.s    871 | Comment     | 11 |         |    0 | 00/1313               | *<sym>
+ 1148 |  1 asmdemo.s    872 | Empty       | 11 |         |    0 | 00/1313               | GET_PREFIX_param                                   ; GET_PREFIX
+ 1149 |  1 asmdemo.s    873 | Data        | 11 |         |    1 | 00/1313 : 01          |                      hex      01                   ; number of params.
+ 1150 |  1 asmdemo.s    874 | Data        | 11 |         |    2 | 00/1314 : 1D 13       |                      da       path                 
+ 1151 |  1 asmdemo.s    875 | Empty       | 11 |         |    0 | 00/1316               |                                                    
+ 1152 |  1 asmdemo.s    876 | Comment     | 11 |         |    0 | 00/1316               | *
+ 1153 |  1 asmdemo.s    877 | Comment     | 11 |         |    0 | 00/1316               | * * * * MLI Call SET_PREFIX parameters * * * *
+ 1154 |  1 asmdemo.s    878 | Comment     | 11 |         |    0 | 00/1316               | *<sym>
+ 1155 |  1 asmdemo.s    879 | Empty       | 11 |         |    0 | 00/1316               | SET_PREFIX_param                                   ; SET_PREFIX
+ 1156 |  1 asmdemo.s    880 | Data        | 11 |         |    1 | 00/1316 : 01          |                      hex      01                   ; number of params.
+ 1157 |  1 asmdemo.s    881 | Data        | 11 |         |    2 | 00/1317 : 1D 13       |                      da       path                 
+ 1158 |  1 asmdemo.s    882 | Comment     | 11 |         |    0 | 00/1319               | *
+ 1159 |  1 asmdemo.s    883 | Comment     | 11 |         |    0 | 00/1319               | *
+ 1160 |  1 asmdemo.s    884 | Comment     | 11 |         |    0 | 00/1319               | * * * * MLI Call ONLINE parameters * * * *
+ 1161 |  1 asmdemo.s    885 | Comment     | 11 |         |    0 | 00/1319               | *<sym>
+ 1162 |  1 asmdemo.s    886 | Empty       | 11 |         |    0 | 00/1319               | ONLINE_param                                       ; ONLINE
+ 1163 |  1 asmdemo.s    887 | Data        | 11 |         |    1 | 00/1319 : 02          |                      hex      02                   ; number of params.
+ 1164 |  1 asmdemo.s    888 | Comment     | 11 |         |    0 | 00/131A               | *<sym>
+ 1165 |  1 asmdemo.s    889 | Data        | 11 |         |    1 | 00/131A : 00          | unit                 hex      00                   
+ 1166 |  1 asmdemo.s    890 | Data        | 11 |         |    2 | 00/131B : 1D 13       |                      da       path                 
+ 1167 |  1 asmdemo.s    891 | Comment     | 11 |         |    0 | 00/131D               | *
+ 1168 |  1 asmdemo.s    892 | Comment     | 11 |         |    0 | 00/131D               | *<sym>
+ 1169 |  1 asmdemo.s    893 | Data        | 11 |         |  256 | 00/131D : 00 00 00 00 | path                 ds       256                  ; storage for path
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+      |                     |             |    |         |      |           00 00 00 00 |
+ 1170 |  1 asmdemo.s    894 | Comment     | 11 |         |    0 | 00/141D               | *
+ 1171 |  1 asmdemo.s    895 | Comment     | 11 |         |    0 | 00/141D               | * * * * MLI Call GET_FILE_INFO parameters * * * *
+ 1172 |  1 asmdemo.s    896 | Comment     | 11 |         |    0 | 00/141D               | *<sym>
+ 1173 |  1 asmdemo.s    897 | Empty       | 11 |         |    0 | 00/141D               | GET_FILE_INFO_param                                ; GET_FILE_INFO
+ 1174 |  1 asmdemo.s    898 | Data        | 11 |         |    1 | 00/141D : 0A          |                      hex      0A                   
+ 1175 |  1 asmdemo.s    899 | Data        | 11 |         |    2 | 00/141E : 1D 13       |                      da       path                 
+ 1176 |  1 asmdemo.s    900 | Comment     | 11 |         |    0 | 00/1420               | *<sym>
+ 1177 |  1 asmdemo.s    901 | Data        | 11 |         |    1 | 00/1420 : 00          | access               hex      00                   
+ 1178 |  1 asmdemo.s    902 | Comment     | 11 |         |    0 | 00/1421               | *<sym>
+ 1179 |  1 asmdemo.s    903 | Data        | 11 |         |    1 | 00/1421 : 00          | ftype                hex      00                   
+ 1180 |  1 asmdemo.s    904 | Comment     | 11 |         |    0 | 00/1422               | *<sym>
+ 1181 |  1 asmdemo.s    905 | Data        | 11 |         |    2 | 00/1422 : 00 00       | auxtype              hex      0000                 
+ 1182 |  1 asmdemo.s    906 | Comment     | 11 |         |    0 | 00/1424               | *<sym>
+ 1183 |  1 asmdemo.s    907 | Data        | 11 |         |    1 | 00/1424 : 00          | stotype              hex      00                   
+ 1184 |  1 asmdemo.s    908 | Comment     | 11 |         |    0 | 00/1425               | *<sym>
+ 1185 |  1 asmdemo.s    909 | Data        | 11 |         |    2 | 00/1425 : 00 00       | blocks               hex      0000                 
+ 1186 |  1 asmdemo.s    910 | Comment     | 11 |         |    0 | 00/1427               | *<sym>
+ 1187 |  1 asmdemo.s    911 | Data        | 11 |         |    2 | 00/1427 : 00 00       | date                 hex      0000                 
+ 1188 |  1 asmdemo.s    912 | Comment     | 11 |         |    0 | 00/1429               | *<sym>
+ 1189 |  1 asmdemo.s    913 | Data        | 11 |         |    2 | 00/1429 : 00 00       | time                 hex      0000                 
+ 1190 |  1 asmdemo.s    914 | Data        | 11 |         |    2 | 00/142B : 00 00       | cdate                hex      0000                 
+ 1191 |  1 asmdemo.s    915 | Data        | 11 |         |    2 | 00/142D : 00 00       | ctime                hex      0000                 
+ 1192 |  1 asmdemo.s    916 | Comment     | 11 |         |    0 | 00/142F               | *
+ 1193 |  1 asmdemo.s    917 | Comment     | 11 |         |    0 | 00/142F               | * * * * MLI Call GET_EOF parameters * * * *
+ 1194 |  1 asmdemo.s    918 | Comment     | 11 |         |    0 | 00/142F               | *<sym>
+ 1195 |  1 asmdemo.s    919 | Empty       | 11 |         |    0 | 00/142F               | GET_EOF_param                                      ; GET_EOF
+ 1196 |  1 asmdemo.s    920 | Data        | 11 |         |    1 | 00/142F : 02          |                      hex      02                   
+ 1197 |  1 asmdemo.s    921 | Comment     | 11 |         |    0 | 00/1430               | *<sym>
+ 1198 |  1 asmdemo.s    922 | Data        | 11 |         |    1 | 00/1430 : 00          | refd1                hex      00                   
+ 1199 |  1 asmdemo.s    923 | Comment     | 11 |         |    0 | 00/1431               | *<sym>
+ 1200 |  1 asmdemo.s    924 | Data        | 11 |         |    3 | 00/1431 : 00 00 00    | filelength           ds       3                    
+ 1201 |  1 asmdemo.s    925 | Comment     | 11 |         |    0 | 00/1434               | *
+ 1202 |  1 asmdemo.s    926 | Comment     | 11 |         |    0 | 00/1434               | * * * * MLI Call CLOSE parameters * * * *
+ 1203 |  1 asmdemo.s    927 | Comment     | 11 |         |    0 | 00/1434               | *<sym>
+ 1204 |  1 asmdemo.s    928 | Empty       | 11 |         |    0 | 00/1434               | CLOSE_param                                        ; CLOSE
+ 1205 |  1 asmdemo.s    929 | Data        | 11 |         |    1 | 00/1434 : 01          |                      hex      01                   
+ 1206 |  1 asmdemo.s    930 | Comment     | 11 |         |    0 | 00/1435               | *<sym>
+ 1207 |  1 asmdemo.s    931 | Data        | 11 |         |    1 | 00/1435 : 00          | refclose             hex      00                   
+ 1208 |  1 asmdemo.s    932 | Comment     | 11 |         |    0 | 00/1436               | *
+ 1209 |  1 asmdemo.s    933 | Comment     | 11 |         |    0 | 00/1436               | * * * * * * * * * * End of MLI Call parameters * * * * * * * * * *
+ 1210 |  1 asmdemo.s    934 | Comment     | 11 |         |    0 | 00/1436               | *
+ 1211 |  1 asmdemo.s    935 | Empty       | 11 |         |    0 | 00/1436               |                                                    
+ 1212 |  1 asmdemo.s    936 | Directive   | 11 |         |    0 | 00/1436               |                      put      hilo                 
+ 1213 |  4    hilo.s      1 | Comment     | 11 |         |    0 | 00/1436               | *
+ 1214 |  4    hilo.s      2 | Comment     | 11 |         |    0 | 00/1436               | *
+ 1215 |  4    hilo.s      3 | Data        | 11 |         |    8 | 00/1436 : 20 24 28 2C | hi                   hex      2024282c3034383c     
       |                     |             |    |         |      |           30 34 38 3C |
- 1198 |  4    hilo.s      4 | Data        | 11 |         |    8 | 00/142B : 20 24 28 2C |                      hex      2024282c3034383c     
+ 1216 |  4    hilo.s      4 | Data        | 11 |         |    8 | 00/143E : 20 24 28 2C |                      hex      2024282c3034383c     
       |                     |             |    |         |      |           30 34 38 3C |
- 1199 |  4    hilo.s      5 | Data        | 11 |         |    8 | 00/1433 : 21 25 29 2D |                      hex      2125292d3135393d     
+ 1217 |  4    hilo.s      5 | Data        | 11 |         |    8 | 00/1446 : 21 25 29 2D |                      hex      2125292d3135393d     
       |                     |             |    |         |      |           31 35 39 3D |
- 1200 |  4    hilo.s      6 | Data        | 11 |         |    8 | 00/143B : 21 25 29 2D |                      hex      2125292d3135393d     
+ 1218 |  4    hilo.s      6 | Data        | 11 |         |    8 | 00/144E : 21 25 29 2D |                      hex      2125292d3135393d     
       |                     |             |    |         |      |           31 35 39 3D |
- 1201 |  4    hilo.s      7 | Data        | 11 |         |    8 | 00/1443 : 22 26 2A 2E |                      hex      22262a2e32363a3e     
+ 1219 |  4    hilo.s      7 | Data        | 11 |         |    8 | 00/1456 : 22 26 2A 2E |                      hex      22262a2e32363a3e     
       |                     |             |    |         |      |           32 36 3A 3E |
- 1202 |  4    hilo.s      8 | Data        | 11 |         |    8 | 00/144B : 22 26 2A 2E |                      hex      22262a2e32363a3e     
+ 1220 |  4    hilo.s      8 | Data        | 11 |         |    8 | 00/145E : 22 26 2A 2E |                      hex      22262a2e32363a3e     
       |                     |             |    |         |      |           32 36 3A 3E |
- 1203 |  4    hilo.s      9 | Data        | 11 |         |    8 | 00/1453 : 23 27 2B 2F |                      hex      23272b2f33373b3f     
+ 1221 |  4    hilo.s      9 | Data        | 11 |         |    8 | 00/1466 : 23 27 2B 2F |                      hex      23272b2f33373b3f     
       |                     |             |    |         |      |           33 37 3B 3F |
- 1204 |  4    hilo.s     10 | Data        | 11 |         |    8 | 00/145B : 23 27 2B 2F |                      hex      23272b2f33373b3f     
+ 1222 |  4    hilo.s     10 | Data        | 11 |         |    8 | 00/146E : 23 27 2B 2F |                      hex      23272b2f33373b3f     
       |                     |             |    |         |      |           33 37 3B 3F |
- 1205 |  4    hilo.s     11 | Data        | 11 |         |    8 | 00/1463 : 20 24 28 2C |                      hex      2024282c3034383c     
+ 1223 |  4    hilo.s     11 | Data        | 11 |         |    8 | 00/1476 : 20 24 28 2C |                      hex      2024282c3034383c     
       |                     |             |    |         |      |           30 34 38 3C |
- 1206 |  4    hilo.s     12 | Data        | 11 |         |    8 | 00/146B : 20 24 28 2C |                      hex      2024282c3034383c     
+ 1224 |  4    hilo.s     12 | Data        | 11 |         |    8 | 00/147E : 20 24 28 2C |                      hex      2024282c3034383c     
       |                     |             |    |         |      |           30 34 38 3C |
- 1207 |  4    hilo.s     13 | Data        | 11 |         |    8 | 00/1473 : 21 25 29 2D |                      hex      2125292d3135393d     
+ 1225 |  4    hilo.s     13 | Data        | 11 |         |    8 | 00/1486 : 21 25 29 2D |                      hex      2125292d3135393d     
       |                     |             |    |         |      |           31 35 39 3D |
- 1208 |  4    hilo.s     14 | Data        | 11 |         |    8 | 00/147B : 21 25 29 2D |                      hex      2125292d3135393d     
+ 1226 |  4    hilo.s     14 | Data        | 11 |         |    8 | 00/148E : 21 25 29 2D |                      hex      2125292d3135393d     
       |                     |             |    |         |      |           31 35 39 3D |
- 1209 |  4    hilo.s     15 | Data        | 11 |         |    8 | 00/1483 : 22 26 2A 2E |                      hex      22262a2e32363a3e     
+ 1227 |  4    hilo.s     15 | Data        | 11 |         |    8 | 00/1496 : 22 26 2A 2E |                      hex      22262a2e32363a3e     
       |                     |             |    |         |      |           32 36 3A 3E |
- 1210 |  4    hilo.s     16 | Data        | 11 |         |    8 | 00/148B : 22 26 2A 2E |                      hex      22262a2e32363a3e     
+ 1228 |  4    hilo.s     16 | Data        | 11 |         |    8 | 00/149E : 22 26 2A 2E |                      hex      22262a2e32363a3e     
       |                     |             |    |         |      |           32 36 3A 3E |
- 1211 |  4    hilo.s     17 | Data        | 11 |         |    8 | 00/1493 : 23 27 2B 2F |                      hex      23272b2f33373b3f     
+ 1229 |  4    hilo.s     17 | Data        | 11 |         |    8 | 00/14A6 : 23 27 2B 2F |                      hex      23272b2f33373b3f     
       |                     |             |    |         |      |           33 37 3B 3F |
- 1212 |  4    hilo.s     18 | Data        | 11 |         |    8 | 00/149B : 23 27 2B 2F |                      hex      23272b2f33373b3f     
+ 1230 |  4    hilo.s     18 | Data        | 11 |         |    8 | 00/14AE : 23 27 2B 2F |                      hex      23272b2f33373b3f     
       |                     |             |    |         |      |           33 37 3B 3F |
- 1213 |  4    hilo.s     19 | Data        | 11 |         |    8 | 00/14A3 : 20 24 28 2C |                      hex      2024282c3034383c     
+ 1231 |  4    hilo.s     19 | Data        | 11 |         |    8 | 00/14B6 : 20 24 28 2C |                      hex      2024282c3034383c     
       |                     |             |    |         |      |           30 34 38 3C |
- 1214 |  4    hilo.s     20 | Data        | 11 |         |    8 | 00/14AB : 20 24 28 2C |                      hex      2024282c3034383c     
+ 1232 |  4    hilo.s     20 | Data        | 11 |         |    8 | 00/14BE : 20 24 28 2C |                      hex      2024282c3034383c     
       |                     |             |    |         |      |           30 34 38 3C |
- 1215 |  4    hilo.s     21 | Data        | 11 |         |    8 | 00/14B3 : 21 25 29 2D |                      hex      2125292d3135393d     
+ 1233 |  4    hilo.s     21 | Data        | 11 |         |    8 | 00/14C6 : 21 25 29 2D |                      hex      2125292d3135393d     
       |                     |             |    |         |      |           31 35 39 3D |
- 1216 |  4    hilo.s     22 | Data        | 11 |         |    8 | 00/14BB : 21 25 29 2D |                      hex      2125292d3135393d     
+ 1234 |  4    hilo.s     22 | Data        | 11 |         |    8 | 00/14CE : 21 25 29 2D |                      hex      2125292d3135393d     
       |                     |             |    |         |      |           31 35 39 3D |
- 1217 |  4    hilo.s     23 | Data        | 11 |         |    8 | 00/14C3 : 22 26 2A 2E |                      hex      22262a2e32363a3e     
+ 1235 |  4    hilo.s     23 | Data        | 11 |         |    8 | 00/14D6 : 22 26 2A 2E |                      hex      22262a2e32363a3e     
       |                     |             |    |         |      |           32 36 3A 3E |
- 1218 |  4    hilo.s     24 | Data        | 11 |         |    8 | 00/14CB : 22 26 2A 2E |                      hex      22262a2e32363a3e     
+ 1236 |  4    hilo.s     24 | Data        | 11 |         |    8 | 00/14DE : 22 26 2A 2E |                      hex      22262a2e32363a3e     
       |                     |             |    |         |      |           32 36 3A 3E |
- 1219 |  4    hilo.s     25 | Data        | 11 |         |    8 | 00/14D3 : 23 27 2B 2F |                      hex      23272b2f33373b3f     
+ 1237 |  4    hilo.s     25 | Data        | 11 |         |    8 | 00/14E6 : 23 27 2B 2F |                      hex      23272b2f33373b3f     
       |                     |             |    |         |      |           33 37 3B 3F |
- 1220 |  4    hilo.s     26 | Data        | 11 |         |    8 | 00/14DB : 23 27 2B 2F |                      hex      23272b2f33373b3f     
+ 1238 |  4    hilo.s     26 | Data        | 11 |         |    8 | 00/14EE : 23 27 2B 2F |                      hex      23272b2f33373b3f     
       |                     |             |    |         |      |           33 37 3B 3F |
- 1221 |  4    hilo.s     27 | Data        | 11 |         |    8 | 00/14E3 : 00 00 00 00 | lo                   hex      0000000000000000     
+ 1239 |  4    hilo.s     27 | Data        | 11 |         |    8 | 00/14F6 : 00 00 00 00 | lo                   hex      0000000000000000     
       |                     |             |    |         |      |           00 00 00 00 |
- 1222 |  4    hilo.s     28 | Data        | 11 |         |    8 | 00/14EB : 80 80 80 80 |                      hex      8080808080808080     
+ 1240 |  4    hilo.s     28 | Data        | 11 |         |    8 | 00/14FE : 80 80 80 80 |                      hex      8080808080808080     
       |                     |             |    |         |      |           80 80 80 80 |
- 1223 |  4    hilo.s     29 | Data        | 11 |         |    8 | 00/14F3 : 00 00 00 00 |                      hex      0000000000000000     
+ 1241 |  4    hilo.s     29 | Data        | 11 |         |    8 | 00/1506 : 00 00 00 00 |                      hex      0000000000000000     
       |                     |             |    |         |      |           00 00 00 00 |
- 1224 |  4    hilo.s     30 | Data        | 11 |         |    8 | 00/14FB : 80 80 80 80 |                      hex      8080808080808080     
+ 1242 |  4    hilo.s     30 | Data        | 11 |         |    8 | 00/150E : 80 80 80 80 |                      hex      8080808080808080     
       |                     |             |    |         |      |           80 80 80 80 |
- 1225 |  4    hilo.s     31 | Data        | 11 |         |    8 | 00/1503 : 00 00 00 00 |                      hex      0000000000000000     
+ 1243 |  4    hilo.s     31 | Data        | 11 |         |    8 | 00/1516 : 00 00 00 00 |                      hex      0000000000000000     
       |                     |             |    |         |      |           00 00 00 00 |
- 1226 |  4    hilo.s     32 | Data        | 11 |         |    8 | 00/150B : 80 80 80 80 |                      hex      8080808080808080     
+ 1244 |  4    hilo.s     32 | Data        | 11 |         |    8 | 00/151E : 80 80 80 80 |                      hex      8080808080808080     
       |                     |             |    |         |      |           80 80 80 80 |
- 1227 |  4    hilo.s     33 | Data        | 11 |         |    8 | 00/1513 : 00 00 00 00 |                      hex      0000000000000000     
+ 1245 |  4    hilo.s     33 | Data        | 11 |         |    8 | 00/1526 : 00 00 00 00 |                      hex      0000000000000000     
       |                     |             |    |         |      |           00 00 00 00 |
- 1228 |  4    hilo.s     34 | Data        | 11 |         |    8 | 00/151B : 80 80 80 80 |                      hex      8080808080808080     
+ 1246 |  4    hilo.s     34 | Data        | 11 |         |    8 | 00/152E : 80 80 80 80 |                      hex      8080808080808080     
       |                     |             |    |         |      |           80 80 80 80 |
- 1229 |  4    hilo.s     35 | Data        | 11 |         |    8 | 00/1523 : 28 28 28 28 |                      hex      2828282828282828     
+ 1247 |  4    hilo.s     35 | Data        | 11 |         |    8 | 00/1536 : 28 28 28 28 |                      hex      2828282828282828     
       |                     |             |    |         |      |           28 28 28 28 |
- 1230 |  4    hilo.s     36 | Data        | 11 |         |    8 | 00/152B : A8 A8 A8 A8 |                      hex      a8a8a8a8a8a8a8a8     
+ 1248 |  4    hilo.s     36 | Data        | 11 |         |    8 | 00/153E : A8 A8 A8 A8 |                      hex      a8a8a8a8a8a8a8a8     
       |                     |             |    |         |      |           A8 A8 A8 A8 |
- 1231 |  4    hilo.s     37 | Data        | 11 |         |    8 | 00/1533 : 28 28 28 28 |                      hex      2828282828282828     
+ 1249 |  4    hilo.s     37 | Data        | 11 |         |    8 | 00/1546 : 28 28 28 28 |                      hex      2828282828282828     
       |                     |             |    |         |      |           28 28 28 28 |
- 1232 |  4    hilo.s     38 | Data        | 11 |         |    8 | 00/153B : A8 A8 A8 A8 |                      hex      a8a8a8a8a8a8a8a8     
+ 1250 |  4    hilo.s     38 | Data        | 11 |         |    8 | 00/154E : A8 A8 A8 A8 |                      hex      a8a8a8a8a8a8a8a8     
       |                     |             |    |         |      |           A8 A8 A8 A8 |
- 1233 |  4    hilo.s     39 | Data        | 11 |         |    8 | 00/1543 : 28 28 28 28 |                      hex      2828282828282828     
+ 1251 |  4    hilo.s     39 | Data        | 11 |         |    8 | 00/1556 : 28 28 28 28 |                      hex      2828282828282828     
       |                     |             |    |         |      |           28 28 28 28 |
- 1234 |  4    hilo.s     40 | Data        | 11 |         |    8 | 00/154B : A8 A8 A8 A8 |                      hex      a8a8a8a8a8a8a8a8     
+ 1252 |  4    hilo.s     40 | Data        | 11 |         |    8 | 00/155E : A8 A8 A8 A8 |                      hex      a8a8a8a8a8a8a8a8     
       |                     |             |    |         |      |           A8 A8 A8 A8 |
- 1235 |  4    hilo.s     41 | Data        | 11 |         |    8 | 00/1553 : 28 28 28 28 |                      hex      2828282828282828     
+ 1253 |  4    hilo.s     41 | Data        | 11 |         |    8 | 00/1566 : 28 28 28 28 |                      hex      2828282828282828     
       |                     |             |    |         |      |           28 28 28 28 |
- 1236 |  4    hilo.s     42 | Data        | 11 |         |    8 | 00/155B : A8 A8 A8 A8 |                      hex      a8a8a8a8a8a8a8a8     
+ 1254 |  4    hilo.s     42 | Data        | 11 |         |    8 | 00/156E : A8 A8 A8 A8 |                      hex      a8a8a8a8a8a8a8a8     
       |                     |             |    |         |      |           A8 A8 A8 A8 |
- 1237 |  4    hilo.s     43 | Data        | 11 |         |    8 | 00/1563 : 50 50 50 50 |                      hex      5050505050505050     
+ 1255 |  4    hilo.s     43 | Data        | 11 |         |    8 | 00/1576 : 50 50 50 50 |                      hex      5050505050505050     
       |                     |             |    |         |      |           50 50 50 50 |
- 1238 |  4    hilo.s     44 | Data        | 11 |         |    8 | 00/156B : D0 D0 D0 D0 |                      hex      d0d0d0d0d0d0d0d0     
+ 1256 |  4    hilo.s     44 | Data        | 11 |         |    8 | 00/157E : D0 D0 D0 D0 |                      hex      d0d0d0d0d0d0d0d0     
       |                     |             |    |         |      |           D0 D0 D0 D0 |
- 1239 |  4    hilo.s     45 | Data        | 11 |         |    8 | 00/1573 : 50 50 50 50 |                      hex      5050505050505050     
+ 1257 |  4    hilo.s     45 | Data        | 11 |         |    8 | 00/1586 : 50 50 50 50 |                      hex      5050505050505050     
       |                     |             |    |         |      |           50 50 50 50 |
- 1240 |  4    hilo.s     46 | Data        | 11 |         |    8 | 00/157B : D0 D0 D0 D0 |                      hex      d0d0d0d0d0d0d0d0     
+ 1258 |  4    hilo.s     46 | Data        | 11 |         |    8 | 00/158E : D0 D0 D0 D0 |                      hex      d0d0d0d0d0d0d0d0     
       |                     |             |    |         |      |           D0 D0 D0 D0 |
- 1241 |  4    hilo.s     47 | Data        | 11 |         |    8 | 00/1583 : 50 50 50 50 |                      hex      5050505050505050     
+ 1259 |  4    hilo.s     47 | Data        | 11 |         |    8 | 00/1596 : 50 50 50 50 |                      hex      5050505050505050     
       |                     |             |    |         |      |           50 50 50 50 |
- 1242 |  4    hilo.s     48 | Data        | 11 |         |    8 | 00/158B : D0 D0 D0 D0 |                      hex      d0d0d0d0d0d0d0d0     
+ 1260 |  4    hilo.s     48 | Data        | 11 |         |    8 | 00/159E : D0 D0 D0 D0 |                      hex      d0d0d0d0d0d0d0d0     
       |                     |             |    |         |      |           D0 D0 D0 D0 |
- 1243 |  4    hilo.s     49 | Data        | 11 |         |    8 | 00/1593 : 50 50 50 50 |                      hex      5050505050505050     
+ 1261 |  4    hilo.s     49 | Data        | 11 |         |    8 | 00/15A6 : 50 50 50 50 |                      hex      5050505050505050     
       |                     |             |    |         |      |           50 50 50 50 |
- 1244 |  4    hilo.s     50 | Data        | 11 |         |    8 | 00/159B : D0 D0 D0 D0 |                      hex      d0d0d0d0d0d0d0d0     
+ 1262 |  4    hilo.s     50 | Data        | 11 |         |    8 | 00/15AE : D0 D0 D0 D0 |                      hex      d0d0d0d0d0d0d0d0     
       |                     |             |    |         |      |           D0 D0 D0 D0 |
- 1245 |  4    hilo.s     51 | Comment     | 11 |         |    0 | 00/15A3               | *
- 1246 |  1 asmdemo.s    919 | Empty       | 11 |         |    0 | 00/15A3               |                                                    
+ 1263 |  4    hilo.s     51 | Comment     | 11 |         |    0 | 00/15B6               | *
+ 1264 |  1 asmdemo.s    937 | Empty       | 11 |         |    0 | 00/15B6               |                                                    
 ------+---------------------+-------------+----+---------+------+-----------------------+-------------------------------------------------------------------

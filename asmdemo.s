@@ -37,9 +37,11 @@ ptr             equ $06
 **************************** MAIN PROGRAM ****************************
 *
                 org $E00
-                jsr DoTextScreen
 
-*<bp>
+*<bp> : set a beak point here for ApleWin, using SetBreaks.exe (see SetBreaks.cpp)
+
+                jsr clearscrn           ; clear dhgr screen before displaying it
+
                 lda #4                  ; get 4 pages for 1024 file buffer 
                 jsr GETBUFR             ; needed by MLI OPEN
                 bcc GetbufOK            ; carry clear means no error in the following code
@@ -62,9 +64,7 @@ BMPok
                 jsr DoHeader            ; check header of BMP data and set vars
                 bcc headerOK            ; exit on error if carry set
                 jmp dataerr             ; exit with error
-
-*<bp>
-                
+         
 *<sym>
 headerOK
                 GP_call InitGraf;0      ; go DHGR mode using Graphics Primitives library
@@ -86,7 +86,7 @@ startimage
 *
 *<sym>
 DoHeader
-* check image specs.
+* check image specs. in BMP header
                 jsr TestSignature       ; test BMP signature
                 bcc oksign              ; exit on error if carry set
                 rts
@@ -228,10 +228,14 @@ printchar       lda errmsg,x
                 jsr cout 
                 inx 
                 jmp printchar
-*<sym>
 errend          jsr crout
                 rts
-* * * * * * * * * * * * * * * * *
+*TODO:
+* Print text message for each case of error
+*TODO:
+*<sym>
+*
+* * * * * * * * * * DATA * * * * * * * * * * 
 *
 *<sym>                             
 MyPort          ds portlength                           ; space for a grafport stucture    
@@ -289,7 +293,7 @@ flipflop        db 1                    ; used to double pixels horizontally
 *<sym>
 quitflag        ds 1                    ; to ckeck if user press escape key
 
-******** line grafport ********
+**** line grafport ****
 *<m1>
 *<sym>
 imageLine       dw 0,0                  ; view location on current port
@@ -306,6 +310,9 @@ carryf          db 1
 *<sym>
 inverse         db 1
 
+
+*
+* * * * * * * * * * IMAGE PROCESSING * * * * * * * * * * 
 *<sym>
 Doimg
 ***** init *****
@@ -360,7 +367,6 @@ setline
                 rol
                 sta clipr+5
 
-***** process data *****
 * outer loop (on all bytes of an image line)
 *<sym>   
 lineloop                                ; get a new input byte  
@@ -577,17 +583,20 @@ nextkey         cmp #$9B                ; escape : exit
                 cmp #"c"                ; c for clear
                 beq doclear
                 cmp #"C"
-                beq doclear
-                rts                     ; none of these keys : do nothing
+                beq doclear             ; clear screen and wait a keydown
+
+                jsr clearscrn           ; non of these keys : clear and redraw immediately
+                rts                     
 *<sym>
 doclear
-                jsr clerscr             ; call clear screen proc.
-                rts
+                jsr clearscrn           ; call clear screen proc.
+                jsr WaitForKeyPress
+                jmp startimage
+
 *<sym>
 exitDK          lda #1                  ; escape : set quit flag
                 sta quitflag
                 rts
-   
 *<sym>
 doInverse
                 lda inverse
@@ -595,15 +604,12 @@ doInverse
                 sta inverse 
                 jmp startimage
 
-
 *<sym>
 WaitForKeyPress 
                 lda kbd
                 bpl WaitForKeyPress
                 sta kbdstrb
                 rts
-
-
 
 * ------------------ utils ------------------
 
@@ -664,9 +670,18 @@ LoadBMP                                 ; read BMP file
                 jsr MLI
                 dfb read
                 da READ_param
+                bcc CloseBMP
                 rts
+*<sym>
+CloseBMP 
+                lda ref
+                sta refclose
+                jsr MLI
+                dfb close
+                da CLOSE_param
+                rts                
 
-* Set DHGR mode
+* Set DHGR mode (unused)
 *<sym>
 dodhgr
                 sta graphics
@@ -680,7 +695,7 @@ dodhgr
 * Clear DHGR screen   
 screenbase      equ $2000               ; address of screen memory    
 *<sym> 
-clerscr
+clearscrn
                 lda #<screenbase
                 sta ptr
                 lda #>screenbase+1
@@ -701,8 +716,6 @@ clrloop
                 cpx #$40
                 bne clrloop
                 sta $C001
-                jsr WaitForKeyPress
-                jmp startimage
                 rts
 
 *<sym>
@@ -833,6 +846,7 @@ onlineOK
 prefixSetOK   
                 rts
 *
+* * * * * * * * * * * * MLI Call parameters * * * * * * * * * * * * 
 *
 * * * * MLI Call READ parameters * * * * 
 *<sym>
@@ -914,5 +928,15 @@ GET_EOF_param                           ; GET_EOF
 refd1           hex 00
 *<sym>
 filelength      ds 3
+*
+* * * * MLI Call CLOSE parameters * * * *
+*<sym>
+CLOSE_param                     ; CLOSE
+                hex 01
+*<sym>
+refclose        hex 00
+*
+* * * * * * * * * * End of MLI Call parameters * * * * * * * * * *
+*
 
-                put hilo
+                put hilo        ; unused (usefull for dhgr memory direct access)
