@@ -57,18 +57,17 @@ doprefixOK
                 jmp dataerr             ; exit with error
 *<sym>
 BMPok
-                jsr DoHeader            ; check header of BMP file in memory
+                jsr DoHeader            ; check header of BMP data and set vars
                 bcc headerOK            ; exit on error if carry set
                 jmp dataerr             ; exit with error
 *<sym>
 headerOK
-                GP_call InitGraf;0              ; go dhgr using Graphics Primitives library
+                GP_call InitGraf;0      ; go DHGR mode using Graphics Primitives library
                 GP_call InitPort;MyPort
                 GP_call SetPort;MyPort
 *<sym>
 startimage
                 jsr Doimg               ; display image 
-                ;jsr DoPaint
                 lda #0                  ; init quif flag
                 sta quitflag
                 jsr WaitForKeyPress     ; 
@@ -114,13 +113,13 @@ samelength                              ; file length = max : OK
 lower                                   ; file length < max : OK
                 ldx #$12                ; get image width in BMP header
                 lda bmp,x 
-                sta hdef
+                sta hdef                ; set hdef var accordingly
                 inx
                 lda bmp,x 
                 sta hdef+1
                 ldx #$16                ; get image height in BMP header
                 lda bmp,x 
-                sta vdef
+                sta vdef                ; set hdef var accordingly
                 inx
                 lda bmp,x 
                 sta vdef+1 
@@ -150,6 +149,11 @@ goodw
                 beq goodh
 *<sym>
 goodh      
+                lda vdef                ; vdef = vdef -1 : tranform img def (1 to n) 
+                bne :1                  ; to screen coordinate (0 to def-1)
+                dec vdef+1
+:1              dec vdef
+
                 ldx #$1C                ; offset to image depth (# of bits per pixel)
                 lda bmp,x               ; get value
                 cmp #1                  ; must be 1 
@@ -281,6 +285,7 @@ flipflop        db 1                    ; used to double pixels horizontally
 quitflag        ds 1                    ; to ckeck if user press escape key
 
 ******** line grafport ********
+*<m1>
 *<sym>
 imageLine       dw 0,0                  ; view location on current port
 *<sym>
@@ -290,7 +295,7 @@ imgw            dw 0                    ; width of bitmap
 *<sym>
 clipr           dw 0,0,0,0              ; clip rectangle
 *<sym>
-outbuff         ds 80
+outbuff         ds 80                   ; max 80 bytes for a dhgr line.
 *<sym>
 carryf          db 1
 *<sym>
@@ -302,8 +307,9 @@ Doimg
 
                 jsr clearbuffer         ; clear line buffer
 
-                lda #0                  ; init input line counter
+                lda #$ff                ; init input line counter to -1
                 sta lineCnt
+                lda #0
                 sta inputBitCnt         ; init input bit counter
                 sta inputBitCnt+1  
                 sta inputByteCnt        ; init # of byte in a row           
@@ -353,7 +359,8 @@ setline
 ***** process data *****
 * outer loop (on all bytes of an image line)
 *<sym>   
-lineloop                                ; get a new input byte                   
+lineloop                                ; get a new input byte  
+                                 
                 lda $ffff               ; self modified
                 pha
                 lda inverse
@@ -430,7 +437,7 @@ updateoutput    inc outputBitPos       ; get bit pos (output)
 
 *<sym>  
 nextline                                ; yes : paint current line and prepare next one
-                jsr drawImgLine         ; a line has been calcultated, paint it !!!
+                jsr drawImgLine2       ; a line has been calcultated, paint it !!!
 
                 lda #<outbuff           ; reset pointer to beginning of output buffer
                 sta getoutbyte+1
@@ -447,7 +454,6 @@ loopadjust                              ; in an image line, # of bytes must be d
                 jsr nextinput           ; else inc pointer to input data
                 inc inputByteCnt        ; inc counter       
                 jmp loopadjust          ; and loop until inputByteCnt is divisible by 4 
-                bne div4ok
 *<sym> 
 div4ok
                 lda #0
@@ -465,7 +471,7 @@ div4ok
                 inc lineCnt             ; inc line counter
                 lda lineCnt
                 cmp vdef                ; all lines done ?
-                beq endimage            ; yes : the image is finished !
+                beq endimage             ; yes : the image is finished !   
                 jmp lineloop            ; no : loop for another image line
 *<sym>  
 endimage
@@ -499,10 +505,52 @@ nextoutput
 *<sym>
 nextoutputO     rts
 *<sym>
-drawImgLine
+drawImgLine                             ; draw line using Graphics Primitives
                 GP_call PaintBits;imageLine     ; dram a line of the image
                 dec imageLine+2
                 rts
+*<bp>
+*<sym>
+drawImgLine2                            ; draw line using direct access to memory   
+                lda imageLine+3         ; upper byte must be 0 
+                beq okYinf256           ; ok
+                rts                     ; else vertical position > 192 : exit
+*<sym>
+okYinf256       ldx imageLine+2         ; get Y pos of line
+                cpx #192
+                bcc okYinf192           ; chek < 192
+                rts                     ; exit il not
+*<sym>
+okYinf192       
+                lda lo,x                ; set pointer prt to memory address
+                sta ptr                 ; of this image line
+                lda hi,x 
+                sta ptr+1
+                ldx #0
+                ldy #0
+                sta $C000
+*<sym>
+pokeloop
+                lda outbuff,x
+                sta RAMWRTON
+                sta (ptr),y 
+                sta RAMWRTOFF
+                inx
+                cpx clipr+4
+                beq outloop 
+                lda outbuff,x 
+                sta (ptr),y 
+                iny 
+                inx 
+                cpx imgw
+                bne pokeloop
+
+
+outloop
+                sta $C001
+                dec imageLine+2
+                rts
+
 *<syme>
 bmp             equ $6000               ; image is supposed to be loaded at $6000 
 
@@ -580,7 +628,6 @@ openBMP
                 jsr MLI                 ; OPEN file 
                 dfb open
                 da  OPEN_parms 
-*<bp>
                 bcc GetEOF              ; no error, go on
                 rts
 *<sym>
@@ -619,7 +666,7 @@ clerscr
                 sta ptr+1
                 ldy #0
                 lda #0
-                STA $C000
+                sta $C000
 *<sym> 
 clrloop         
                 sta (ptr),y 
@@ -846,3 +893,5 @@ GET_EOF_param                           ; GET_EOF
 refd1           hex 00
 *<sym>
 filelength      ds 3
+
+                put hilo
