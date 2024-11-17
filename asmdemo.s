@@ -12,7 +12,7 @@
 * the image is drawn line by line, using PaintBits function of Graphics Primitives package
 *
 *
-* Memory :
+* Memory usage :
 * STARTUP (Basic) : $801 
 * Font : $800 : destroy STARTUP !
 * Program : $E00 - $1FFF
@@ -31,8 +31,10 @@ GP_call     MAC                                         ; call to graphic primit
                 put equates
                 put equ
                               ; loading address of "TEST.FONT" file
-*<sym>
+*<syme>
 ptr             equ $06
+*<syme>
+bmp             equ $6000               ; image is supposed to be loaded at $6000 
 *
 **************************** MAIN PROGRAM ****************************
 *
@@ -139,7 +141,7 @@ lower                                   ; file length < max : OK
                 bne badw
                 beq goodw
 *<sym>
-badw            
+badw
                 sec                     ; width is too large 
                 rts
 *<sym>
@@ -153,7 +155,7 @@ goodw
                 bne badw
                 beq goodh
 *<sym>
-goodh      
+goodh
                 lda vdef                ; vdef = vdef -1 : tranform img def (1 to n) 
                 bne :1                  ; to screen coordinate (0 to def-1)
                 dec vdef+1
@@ -166,7 +168,7 @@ goodh
                 sec                     ; <> 1 bit per pixel 
                 rts
 *<sym>
-gooddepth            
+gooddepth
                 ldx #$A                 ; get image offset in BMP header
                                         ; image data start @ bmp+imgoffset
                 lda bmp,x 
@@ -529,7 +531,7 @@ drawImgLine                             ; draw line using Graphics Primitives
                 rts
 
 *<sym>
-drawImgLine2                            ; draw line using direct access to memory   
+drawImgLine2                            ; draw line using direct access to memory 
                 lda imageLine+3         ; upper byte must be 0 
                 beq okYinf256           ; ok
                 rts                     ; else vertical position > 192 : exit
@@ -549,6 +551,7 @@ okYinf192
                 sta STORE80OFF
 *<sym>
 pokeloop
+                sta speaker             ; to make some noise
                 lda outbuff,x
                 sta RAMWRTON            ; write in aux memory
                 sta (ptr),y 
@@ -556,10 +559,12 @@ pokeloop
                 inx
                 cpx imgw                ; end ond line ?
                 beq outloop 
-                lda outbuff,x 
+                lda outbuff,x           ; next input byte
                 sta (ptr),y 
+                sta speaker             ; to make some noise
                 iny 
                 inx 
+
                 cpx imgw
                 bne pokeloop
 *<sym>
@@ -567,8 +572,6 @@ outloop
                 sta STORE80ON
                 dec imageLine+2
                 rts
-*<syme>
-bmp             equ $6000               ; image is supposed to be loaded at $6000 
 
 *<sym>
 DoKey                                   ; test keys
@@ -620,7 +623,7 @@ testLength
                 sec 
                 rts
 :1              
-                lda filelength+1        ; compare file length           
+                lda filelength+1        ; compare file length      
                 cmp #>maxlen            ; to maxlen
                 bne :2
                 lda filelength
@@ -731,6 +734,8 @@ DoTextScreen
                 jsr normal
                 jsr pr0
                 jsr in0
+                ;lda #$3                        ; uncomment to go 80 col.
+                ;jsr OUTPORT                    ; equivalent of PR#3
                 rts
 *
 *<sym>
@@ -863,7 +868,7 @@ readlen         hex 0000                ; bytes read
 *
 * * * * MLI Call OPEN parameters * * * * 
 *<sym>
-OPEN_parms                                ; OPEN file for reading             
+OPEN_parms                              ; OPEN file for reading             
                 hex 03                  ; number of params.
                 da fname                ; path name
 *<sym>
@@ -931,7 +936,7 @@ filelength      ds 3
 *
 * * * * MLI Call CLOSE parameters * * * *
 *<sym>
-CLOSE_param                     ; CLOSE
+CLOSE_param                             ; CLOSE
                 hex 01
 *<sym>
 refclose        hex 00

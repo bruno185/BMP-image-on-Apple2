@@ -39,6 +39,7 @@ kbdstrb         equ $C010
 col80off        equ $C00C
 col80on         equ $C00D
 80col           equ $C01F 
+speaker         equ $C030
 
 graphics        equ $C050
 mixoff          equ $C052
