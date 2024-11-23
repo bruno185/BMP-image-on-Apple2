@@ -43,17 +43,12 @@ bmp             equ $6000               ; image is supposed to be loaded at $600
 *
 *<bp> : set a beak point here for ApleWin, using SetBreaks.exe (see SetBreaks.cpp)
 
-*TODO:
-* displays instruction on text screen
-*TODO:
                 jsr clearscrn           ; clear dhgr screen before displaying it
 
                 lda #4                  ; get 4 pages for 1024 file buffer 
                 jsr GETBUFR             ; needed by MLI OPEN
                 bcc GetbufOK            ; carry clear means no error in the following code
                 jmp dataerr             ; carry set means error
-
-                
 
 *<sym>
 GetbufOK
@@ -459,11 +454,6 @@ updateoutput    inc outputBitPos       ; get bit pos (output)
 * Then variables must be reset for next line, if any.
 *<sym>  
 nextline                                ; yes : paint current line and prepare next one
-                lda effect              ; load effect vat
-                beq noeffect            ; if 0 : no effect
-                jsr doEffect            ; if 1 : apply effects on current line
-*<sym>                
-noeffect
                 jsr drawImgLine2        ; a line has been calcultated, paint it !!!
 
                 lda #<outbuff           ; reset pointer to beginning of output buffer
@@ -561,20 +551,20 @@ okYinf192
                 sta STORE80OFF
 *<sym>
 pokeloop
-                sta speaker             ; make some noise
+                sta speaker             ; to make some noise
+                lda outbuff,x
                 sta RAMWRTON            ; write in aux memory
-                lda outbuff,x 
                 sta (ptr),y 
                 sta RAMWRTOFF           ; write in main memory             
                 inx
                 cpx imgw                ; end ond line ?
                 beq outloop 
-
-                lda outbuff,x 
+                lda outbuff,x           ; next input byte
                 sta (ptr),y 
-                sta speaker             ; make some noise
+                sta speaker             ; to make some noise
                 iny 
                 inx 
+
                 cpx imgw                ; end ond line ?
                 bne pokeloop            ; no : loop
 *<sym>
@@ -598,17 +588,6 @@ nextkey         cmp #$9B                ; escape : exit
                 cmp #"C"
                 beq doclear             ; clear screen and wait a keydown
 
-                cmp #" "                ; space bar ?
-                bne :1
-                lda #1                  ; yes : invert effect var
-                sta effect
-                jsr initrand
-                jsr random              ; and generate random numbers
-                jmp noeff
-:1
-                lda #0
-                sta effect
-noeff
                 jsr clearscrn           ; non of these keys : clear and redraw immediately
                 rts                     
 *<sym>
@@ -627,31 +606,12 @@ doInverse
                 eor #$01
                 sta inverse 
                 jmp startimage
+
 *<sym>
-doEffect
-                ldx #0
-*<sym>
-effectloop
-                lda outbuff,x 
-                and R1 
-                ora #$80
-                sta outbuff,x 
-                inx
-                cpx imgw                ; end ond line ?
-                bne effectloop
-                rts
-*<sym> 
-effect          db 00                   ; random effects on or off (1 or 0)
-*<sym>           
+                
 WaitForKeyPress 
                 sta kbdstrb             ; clear previous keys
 waitfk          lda kbd                 ; get keybord 
-                pha
-                inc $4e
-                bne :1
-                inc $4f 
-:1      
-                pla
                 bpl waitfk              ; no key : loop
                 sta kbdstrb             ; a key : clear 
                 rts                     ; and return with key code in A
@@ -987,4 +947,3 @@ refclose        hex 00
 *
 
                 put hilo                ; usefull for dhgr memory direct access
-                put random
