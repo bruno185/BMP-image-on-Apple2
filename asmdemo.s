@@ -1,6 +1,7 @@
 * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 *                                                   *
-*   Diplay a BMP image using Graphics Primitives    *      
+* Diplay a b&w BMP image using Graphics Primitives  * 
+*           (or direct access to memory)            * 
 *                                                   *  
 * * * * * * * * * * * * * * * * * * * * * * * * * * *  
 *
@@ -22,15 +23,15 @@
 * grafport storage : $8000
 
 *<sym>
-GP_call     MAC                                         ; call to graphic primitives (macro)
-                jsr GrafMLI                             ; graphic primitives only entry point
-                dfb ]1                                  ; command ID (1 byte)
-                da  ]2                                  ; address of parameter(s) (2 bytes), 0 if no paramter
+GP_call     MAC                         ; call to graphic primitives (macro)
+                jsr GrafMLI             ; graphic primitives only entry point
+                dfb ]1                  ; command ID (1 byte)
+                da  ]2                  ; address of parameter(s) (2 bytes), 0 if no paramter
                 EOM
 
                 put equates
                 put equ
-                              ; loading address of "TEST.FONT" file
+                                        ; loading address of "TEST.FONT" file
 *<syme>
 ptr             equ $06
 *<syme>
@@ -39,7 +40,7 @@ bmp             equ $6000               ; image is supposed to be loaded at $600
 **************************** MAIN PROGRAM ****************************
 *
                 org $E00
-
+*
 *<bp> : set a beak point here for ApleWin, using SetBreaks.exe (see SetBreaks.cpp)
 
                 jsr clearscrn           ; clear dhgr screen before displaying it
@@ -240,7 +241,7 @@ errend          jsr crout
 * * * * * * * * * * DATA * * * * * * * * * * 
 *
 *<sym>                             
-MyPort          ds portlength                           ; space for a grafport stucture    
+MyPort          ds portlength           ; space for a grafport stucture    
 
 *<sym>
 errmsg          asc "Error !"
@@ -266,17 +267,17 @@ errmsg          asc "Error !"
 *
 * vars :
 *<sym>
-lineCnt         ds 1    ; current # of lines
+lineCnt         ds 1                    ; current # of lines
 *<sym>
-inputBitPos     ds 1    ; current position in input byte (0 to 7)
+inputBitPos     ds 1                    ; current position in input byte (0 to 7)
 *<sym>
-inputBitCnt     ds 2    ; current # of input byte (0 to hdef - 1)
+inputBitCnt     ds 2                    ; current # of input byte (0 to hdef - 1)
 *<sym>
-outputBitPos    ds 1    ; current position in ouput byte (0 to 6)
+outputBitPos    ds 1                    ; current position in ouput byte (0 to 6)
 *<sym>
-inbyte          ds 1    ; save input byte
+inbyte          ds 1                    ; save input byte
 *<sym>
-inputByteCnt    ds 1    ; counts # of input byte in a line
+inputByteCnt    ds 1                    ; counts # of input byte in a line
 *<sym>
 tableZero
                 db %11111110 
@@ -311,8 +312,7 @@ outbuff         ds 80                   ; max 80 bytes for a dhgr line.
 carryf          db 1
 *<sym>
 inverse         db 1
-
-
+*
 *
 * * * * * * * * * * IMAGE PROCESSING * * * * * * * * * * 
 *<sym>
@@ -454,7 +454,7 @@ updateoutput    inc outputBitPos       ; get bit pos (output)
 * Then variables must be reset for next line, if any.
 *<sym>  
 nextline                                ; yes : paint current line and prepare next one
-                jsr drawImgLine2       ; a line has been calcultated, paint it !!!
+                jsr drawImgLine2        ; a line has been calcultated, paint it !!!
 
                 lda #<outbuff           ; reset pointer to beginning of output buffer
                 sta getoutbyte+1
@@ -531,13 +531,13 @@ drawImgLine                             ; draw line using Graphics Primitives
                 rts
 
 *<sym>
-drawImgLine2                            ; draw line using direct access to memory 
-                lda imageLine+3         ; upper byte must be 0 
+drawImgLine2    ; draw line using direct access to memory 
+                lda imageLine+3         ; upper byte of vertical position must be 0 (<==> Y < 265)
                 beq okYinf256           ; ok
                 rts                     ; else vertical position > 192 : exit
 *<sym>
 okYinf256       ldx imageLine+2         ; get Y pos of current line
-                cpx #192                ; check if line # is < 192
+                cpx #192                ; check if line # is <= 192
                 bcc okYinf192           
                 rts                     ; exit if not
 *<sym>
@@ -565,16 +565,16 @@ pokeloop
                 iny 
                 inx 
 
-                cpx imgw
-                bne pokeloop
+                cpx imgw                ; end ond line ?
+                bne pokeloop            ; no : loop
 *<sym>
 outloop
                 sta STORE80ON
-                dec imageLine+2
+                dec imageLine+2         ; dec line #
                 rts
 
 *<sym>
-DoKey                                   ; test keys
+DoKey                                   ; test i key for clear
                 cmp #"i"                ; if i ou I : negate image
                 beq doInverse
                 cmp #"I" 
@@ -583,7 +583,7 @@ DoKey                                   ; test keys
 nextkey         cmp #$9B                ; escape : exit
                 beq exitDK
 
-                cmp #"c"                ; c for clear
+                cmp #"c"                ; test c key for clear
                 beq doclear
                 cmp #"C"
                 beq doclear             ; clear screen and wait a keydown
@@ -592,9 +592,9 @@ nextkey         cmp #$9B                ; escape : exit
                 rts                     
 *<sym>
 doclear
-                jsr clearscrn           ; call clear screen proc.
+                jsr clearscrn           ;  clear DHGR screen
                 jsr WaitForKeyPress
-                jmp startimage
+                jmp startimage          ; redraw image
 
 *<sym>
 exitDK          lda #1                  ; escape : set quit flag
@@ -608,17 +608,19 @@ doInverse
                 jmp startimage
 
 *<sym>
+                
 WaitForKeyPress 
-                lda kbd
-                bpl WaitForKeyPress
-                sta kbdstrb
-                rts
-
+                sta kbdstrb             ; clear previous keys
+waitfk          lda kbd                 ; get keybord 
+                bpl waitfk              ; no key : loop
+                sta kbdstrb             ; a key : clear 
+                rts                     ; and return with key code in A
+*
 * ------------------ utils ------------------
-
+*
 *<sym>
 testLength
-                lda filelength+2        ;       Byte 3 must 0 (else file size would be > $FFFF)            
+                lda filelength+2        ; Byte 3 must 0 (else file size would be > $FFFF)            
                 beq :1
                 sec 
                 rts
@@ -641,7 +643,7 @@ higherlen
                 rts
 *
 * open BMP file
-
+*
 *<sym>
 openBMP       
                 jsr MLI                 ; OPEN file 
@@ -734,8 +736,8 @@ DoTextScreen
                 jsr normal
                 jsr pr0
                 jsr in0
-                ;lda #$3                        ; uncomment to go 80 col.
-                ;jsr OUTPORT                    ; equivalent of PR#3
+                ;lda #$3                ; uncomment to go 80 col.
+                ;jsr OUTPORT            ; equivalent of PR#3
                 rts
 *
 *<sym>
@@ -762,7 +764,7 @@ ProDOSQuit
                 rts
 *<sym>
 QuitParams      dfb 4
-                dw 0,0,0,0                              ; standard parameters for Quit call
+                dw 0,0,0,0              ; standard parameters for Quit call
 *
 *<sym>
 computeBytes
@@ -944,4 +946,4 @@ refclose        hex 00
 * * * * * * * * * * End of MLI Call parameters * * * * * * * * * *
 *
 
-                put hilo        ; unused (usefull for dhgr memory direct access)
+                put hilo                ; usefull for dhgr memory direct access
